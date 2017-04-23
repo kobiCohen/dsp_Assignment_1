@@ -38,7 +38,7 @@ def implement_task(task):
     :return: None
     """
     # convert json string ti python object
-    task_type, task_url = json.loads(task)
+    task_type, task_url = json.loads(task.body)
     download_pdf(task_url)
     if task_type == 'ToImage':
         ConvetToHtml(task_url)
