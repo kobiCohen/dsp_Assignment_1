@@ -8,7 +8,7 @@ class Logger(object):
         # get the machine ip
         self.ip = socket.gethostbyname(socket.gethostname())
         sqs = boto3.resource('sqs')
-        self.info_sqs = sqs.create_queue(QueueName='info')
+        self.info_sqs = sqs.create_queue(QueueName='info_sqs')
         self.warning_sqs = sqs.create_queue(QueueName='warning_sqs')
         self.critical_sqs = sqs.create_queue(QueueName='critical_sqs')
 

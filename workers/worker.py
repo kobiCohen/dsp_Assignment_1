@@ -2,7 +2,7 @@ import boto3
 import json
 import urllib2
 from logger.logger import Logger
-from setting import download_pdf_dic, convert_pdf_dic
+from setting import download_pdf_dic, convert_pdf_dic, bucket_name
 from pdf_to_htm import pdf_to_html
 from pdf_to_img import pdf_to_png
 from pdf_to_txt import pdf_to_txt
@@ -10,22 +10,33 @@ from subprocess import check_call
 
 
 sqs = boto3.resource('sqs')
-task_sqs = sqs.create_queue(QueueName='task')
+s3 = boto3.resource('s3')
+task_sqs = sqs.create_queue(QueueName='task_sqs')
 log = Logger()
 
 
-def upload_file_to_s3():
-    pass
+def upload_file_to_s3(pdf_name):
+    """
+    tar new object and upload it to s3
+    :param pdf_name: the pdf name
+    :return: None
+    """
+    tar_name = '{0}.tar.gz'.format(pdf_name)
+    tar_full_path = '{0}/{1}.tar.gz'.format(convert_pdf_dic, tar_name)
+    check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
+    with open(tar_full_path, 'rb') as binary_data:
+        s3.Bucket(bucket_name).put_object(Key=tar_name, Body=binary_data)
 
 
 def clean_pdf_folder():
     """
     clean the pdf download folder and result folder
+    then recreate them
     :return: None
     """
     check_call('sudo rm -fr {0}'.format(download_pdf_dic), shell=True)
     check_call('sudo rm -fr {0}'.format(convert_pdf_dic), shell=True)
-    check_call('mkdir -p {0}'.format(convert_pdf_dic), shell=True)
+    check_call('mkdir -p {0}'.format(download_pdf_dic), shell=True)
     check_call('mkdir -p {0}'.format(convert_pdf_dic), shell=True)
 
 # def create_pdf_folder():
@@ -72,7 +83,7 @@ def get_task_message():
     """
     get one task from the task sqs queue.
     and convert it from json to python structure
-    :return: one sqs message
+    :return: one sqs message and if the queue os empty return None
     """
     task = task_sqs.receive_messages(1)
     if len(task) > 0:
@@ -87,6 +98,7 @@ def run():
     will stop only when the worker is shutdown
     :return: None
     """
+    import pudb;pu.db
     while True:
         task = get_task_message()
         if task:
@@ -101,7 +113,6 @@ def worker_main():
     :return: None
     """
     log.info('worker start is life cycle')
-    import pudb;pu.db
     run()
 
 # you will enter the if statement only when the module is main

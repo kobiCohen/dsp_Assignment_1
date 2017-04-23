@@ -4,11 +4,10 @@ from subprocess import check_call
 
 def pdf_to_html(pdf_name):
     pdf_path = '{0}/{1}.pdf'.format(download_pdf_dic, pdf_name)
-    html_path = '{0}/{1}.html'.format(convert_pdf_dic, pdf_name)
+    html_path = '{0}/main.html'.format(convert_pdf_dic)
     tar_name = '{0}.tar.gz'.format(pdf_name)
     tar_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
     check_call('pdftohtml -l 1 {0} {1}'.format(pdf_path, html_path), shell=True)
-    check_call('tar -cvf {0} {1}/*'.format(tar_path, convert_pdf_dic), shell=True)
     return tar_path
 
 
