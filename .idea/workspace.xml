@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60546989-55f0-469c-b392-7ab7735ab073" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workers/pdf_to_htm.py" afterPath="$PROJECT_DIR$/workers/pdf_to_htm.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workers/pdf_to_txt.py" afterPath="$PROJECT_DIR$/workers/pdf_to_txt.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workers/worker.py" afterPath="$PROJECT_DIR$/workers/worker.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,7 +34,7 @@
       <file leaf-file-name="worker_deploy.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/workers/worker_deploy.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
+            <state relative-caret-position="-4">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding>
                 <element signature="e#0#63#0" expanded="true" />
@@ -68,7 +69,7 @@
         <entry file="file://$PROJECT_DIR$/workers/pdf_to_txt.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="312">
-              <caret line="27" column="36" lean-forward="false" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
+              <caret line="27" column="67" lean-forward="false" selection-start-line="27" selection-start-column="67" selection-end-line="27" selection-end-column="67" />
               <folding>
                 <element signature="e#584#637#0" expanded="true" />
               </folding>
@@ -79,8 +80,8 @@
       <file leaf-file-name="pdf_to_htm.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/workers/pdf_to_htm.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="75">
-              <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+            <state relative-caret-position="275">
+              <caret line="11" column="19" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="19" />
               <folding>
                 <element signature="e#0#53#0" expanded="true" />
               </folding>
@@ -101,8 +102,8 @@
       <file leaf-file-name="worker.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/workers/worker.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="26" column="70" lean-forward="false" selection-start-line="26" selection-start-column="70" selection-end-line="26" selection-end-column="70" />
+            <state relative-caret-position="312">
+              <caret line="101" column="16" lean-forward="false" selection-start-line="101" selection-start-column="16" selection-end-line="101" selection-end-column="16" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -152,10 +153,10 @@
       <list>
         <option value="$PROJECT_DIR$/logger/__init__.py" />
         <option value="$PROJECT_DIR$/logger/logger.py" />
-        <option value="$PROJECT_DIR$/workers/pdf_to_htm.py" />
-        <option value="$PROJECT_DIR$/workers/pdf_to_txt.py" />
         <option value="$PROJECT_DIR$/workers/setting.py" />
         <option value="$PROJECT_DIR$/workers/pdf_to_img.py" />
+        <option value="$PROJECT_DIR$/workers/pdf_to_txt.py" />
+        <option value="$PROJECT_DIR$/workers/pdf_to_htm.py" />
         <option value="$PROJECT_DIR$/workers/worker.py" />
       </list>
     </option>
@@ -513,34 +514,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/logger/logger.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="72">
-          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/workers/main.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="20" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/workers/worker_deploy.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#63#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/workers/setting.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="24">
@@ -551,8 +524,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/workers/pdf_to_htm.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="3" column="0" lean-forward="false" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        <state relative-caret-position="275">
+          <caret line="11" column="19" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="19" />
           <folding>
             <element signature="e#0#53#0" expanded="true" />
           </folding>
@@ -562,7 +535,7 @@
     <entry file="file://$PROJECT_DIR$/workers/pdf_to_txt.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="312">
-          <caret line="27" column="36" lean-forward="false" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
+          <caret line="27" column="67" lean-forward="false" selection-start-line="27" selection-start-column="67" selection-end-line="27" selection-end-column="67" />
           <folding>
             <element signature="e#584#637#0" expanded="true" />
           </folding>
@@ -579,10 +552,38 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/workers/main.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="20" lean-forward="true" selection-start-line="16" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/workers/worker_deploy.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#63#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/logger/logger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="3" column="0" lean-forward="true" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/workers/worker.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="26" column="70" lean-forward="false" selection-start-line="26" selection-start-column="70" selection-end-line="26" selection-end-column="70" />
+        <state relative-caret-position="312">
+          <caret line="101" column="16" lean-forward="false" selection-start-line="101" selection-start-column="16" selection-end-line="101" selection-end-column="16" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

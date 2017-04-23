@@ -99,6 +99,7 @@ def worker_main():
     :return: None
     """
     log.info('worker start is life cycle')
+    import pudb;pu.db
     run()
 
 # you will enter the if statement only when the module is main
