@@ -1,10 +1,10 @@
 import PyPDF2
-from setting import pdf_default_name, download_pdf_dic
+from setting import download_pdf_dic, convert_pdf_dic
 
 
 def pdf_to_txt(pdf_name):
-    pdf_path = '{0}/{1}'.format(download_pdf_dic, pdf_default_name)
-    txt_path = '{0}/{1}'
+    pdf_path = '{0}/{1}.pdf'.format(download_pdf_dic, pdf_name)
+    txt_path = '{0}/{1}.txt'.format(convert_pdf_dic, pdf_name)
     pdf_txt = None
     # rb == open in binary mode
     with open(pdf_path, 'rb') as pdf_file:

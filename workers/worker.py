@@ -39,13 +39,15 @@ def implement_task(task):
     """
     # convert json string to python object
     task_type, task_url = json.loads(task.body)
+    # parser the pdf name from pdf_url
+    pdf_name = task_url.split('/')[-1][:-4]
     download_pdf(task_url)
     if task_type == 'ToImage':
-        ConvetToHtml(task_url)
+        ConvetToHtml(pdf_name)
     elif task_type == 'ToHTML':
-        ConvetToImg(task_url)
+        ConvetToImg(pdf_name)
     elif task_type == 'ToText':
-        pdf_to_txt(task_url)
+        pdf_to_txt(pdf_name)
     else:
         log.warning('the task {0}-{1} is known type'.format(task_type, task_url))
     upload_tar_to_s3()
