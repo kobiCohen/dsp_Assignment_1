@@ -23,8 +23,8 @@ def clean_pdf_folder():
     clean the pdf download folder and result folder
     :return: None
     """
-    check_call(['sudo', 'rm', '-r', '{0}/*'.format(download_pdf_dic)])
-    check_call(['sudo', 'rm', '-r', '{0}/*'.format(convert_pdf_dic)])
+    check_call(['sudo', 'rm', '-fr', '{0}/*'.format(download_pdf_dic)])
+    check_call(['sudo', 'rm', '-fr', '{0}/*'.format(convert_pdf_dic)])
 
 # def create_pdf_folder():
 #     check_call(['mkdir', 'rm', '-r', '{0}/'.format(download_pdf_dic)])
