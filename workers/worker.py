@@ -1,11 +1,13 @@
 import boto3
+import json
+
 from logger.logger import Logger
 from pdf_to_htm import ConvetToHtml
 from pdf_to_img import ConvetToImg
 from pdf_to_txt import ConvetToTxt
 
 sqs = boto3.resource('sqs')
-task_sqs = sqs.get_queue_by_name('task')
+task_sqs = sqs.create_queue(QueueName='task')
 log = Logger()
 
 
@@ -26,13 +28,13 @@ def implement_task(task):
 def get_task_message():
     """
     get one task from the task sqs queue.
-    the queue
+    and convert it from json to python structure
     :return: one sqs message
     """
     tasks = task_sqs.receive_messages(1)
     if len(tasks) > 0:
         task = tasks[0]
-        return task
+        return json.loads(task)
     else:
         return None
 
@@ -56,6 +58,7 @@ def worker_main():
     the call the main loop aka run
     :return: None
     """
+    log.info('worker start is life cycle')
     run()
 
 
@@ -63,4 +66,3 @@ if __name__ == "__main__":
     worker_main()
 
 
-    # In [3]: sqs = boto3.resource('sqs', region_name='eu-central-1')

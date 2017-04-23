@@ -1,6 +1,3 @@
-from wand.image import Image
-from wand.color import Color
-
 class ConvetToImg(object):
 
     def __init__(self, pdf_path):
