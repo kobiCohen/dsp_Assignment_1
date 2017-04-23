@@ -2,22 +2,29 @@ import boto3
 import json
 import urllib2
 from logger.logger import Logger
-from setting import download_pdf_dic
-from pdf_to_htm import ConvetToHtml
-from pdf_to_img import ConvetToImg
+from setting import download_pdf_dic, convert_pdf_dic
+from pdf_to_htm import pdf_to_html
+from pdf_to_img import pdf_to_png
 from pdf_to_txt import pdf_to_txt
+from subprocess import check_call
+
 
 sqs = boto3.resource('sqs')
 task_sqs = sqs.create_queue(QueueName='task')
 log = Logger()
 
 
-def upload_tar_to_s3():
+def upload_file_to_s3():
     pass
 
 
 def clean_pdf_folder():
-    pass
+    """
+    clean the pdf download folder and result folder
+    :return: None
+    """
+    check_call(['sudo', 'rm', '-r', '{0}/*'.format(download_pdf_dic)])
+    check_call(['sudo', 'rm', '-r', '{0}/*'.format(convert_pdf_dic)])
 
 
 def download_pdf(task_pdf, pdf_name):
@@ -37,21 +44,21 @@ def implement_task(task):
     :param task: json string [task_type, pdf_url]
     :return: None
     """
+    clean_pdf_folder()
     # convert json string to python object
     task_type, task_url = json.loads(task.body)
     # parser the pdf name from pdf_url
     pdf_name = task_url.split('/')[-1][:-4]
     download_pdf(task_url, pdf_name)
     if task_type == 'ToImage':
-        ConvetToHtml(pdf_name)
+        pdf_to_html(pdf_name)
     elif task_type == 'ToHTML':
-        ConvetToImg(pdf_name)
+        pdf_to_png(pdf_name)
     elif task_type == 'ToText':
         pdf_to_txt(pdf_name)
     else:
         log.warning('the task {0}-{1} is known type'.format(task_type, task_url))
-    upload_tar_to_s3()
-    clean_pdf_folder()
+    upload_file_to_s3()
     task.delete()
 
 

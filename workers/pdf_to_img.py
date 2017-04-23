@@ -1,8 +1,13 @@
-class ConvetToImg(object):
-
-    def __init__(self, pdf_path):
-           pass
+from setting import download_pdf_dic, convert_pdf_dic
+from subprocess import check_call
 
 
-if 'main' == __name__:
-    ConvetToImg('ex1_alg2.pdf')
+def pdf_to_png(pdf_name):
+    pdf_path = '{0}/{1}.pdf'.format(download_pdf_dic, pdf_name)
+    png_path = '{0}/{1}'.format(convert_pdf_dic, pdf_name)
+    check_call(['pdftoppm', '-png', pdf_path, png_path])
+    return png_path
+
+
+
+
