@@ -37,7 +37,7 @@ def implement_task(task):
     :param task: json string [task_type, pdf_url]
     :return: None
     """
-    # convert json string ti python object
+    # convert json string to python object
     task_type, task_url = json.loads(task.body)
     download_pdf(task_url)
     if task_type == 'ToImage':
