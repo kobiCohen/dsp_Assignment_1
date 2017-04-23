@@ -30,6 +30,7 @@ def clean_pdf_folder():
 #     check_call(['mkdir', 'rm', '-r', '{0}/'.format(download_pdf_dic)])
 #     check_call(['mkkdir', 'rm', '-r', '{0}/'.format(convert_pdf_dic)])
 
+
 def download_pdf(task_pdf, pdf_name):
     """
     download the file from the web
@@ -37,7 +38,7 @@ def download_pdf(task_pdf, pdf_name):
     :return: None
     """
     response = urllib2.urlopen(task_pdf)
-    with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w') as pdf_file:
+    with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
         pdf_file.write(response.read())
 
 

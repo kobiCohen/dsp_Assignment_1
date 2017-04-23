@@ -1,7 +1,7 @@
 
-download_pdf_dic = '~/pdf'
+download_pdf_dic = '/home/ubuntu/pdf'
 
-convert_pdf_dic = '~/pdf_result'
+convert_pdf_dic = '/home/ubuntu/pdf_result'
 
 
 
