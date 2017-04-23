@@ -2,13 +2,11 @@ import boto3
 import socket
 
 
-
 class Logger(object):
 
     def __init__(self):
         # get the machine ip
         self.ip = socket.gethostbyname(socket.gethostname())
-        # self.ip = netifaces.ifaddresses('eth0')[2][0]['addr']
         sqs = boto3.resource('sqs')
         self.info_sqs = sqs.create_queue(QueueName='info')
         self.warning_sqs = sqs.create_queue(QueueName='warning_sqs')
