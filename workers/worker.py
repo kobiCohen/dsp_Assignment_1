@@ -22,7 +22,7 @@ def upload_file_to_s3(pdf_name, operation_type):
     :return: None
     """
     tar_name = '{0}.tar.gz'.format(pdf_name)
-    tar_full_path = '{0}/{1}.tar.gz'.format(convert_pdf_dic, tar_name)
+    tar_full_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
     check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
     with open(tar_full_path, 'rb') as binary_data:
         s3.Bucket(bucket_name).put_object(Key='{0}/{1}'.format(operation_type, tar_name), Body=binary_data)
