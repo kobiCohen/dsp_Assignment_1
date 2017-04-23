@@ -15,7 +15,7 @@ task_sqs = sqs.create_queue(QueueName='task_sqs')
 log = Logger()
 
 
-def upload_file_to_s3(pdf_name):
+def upload_file_to_s3(pdf_name, operation_type):
     """
     tar new object and upload it to s3
     :param pdf_name: the pdf name
@@ -25,7 +25,7 @@ def upload_file_to_s3(pdf_name):
     tar_full_path = '{0}/{1}.tar.gz'.format(convert_pdf_dic, tar_name)
     check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
     with open(tar_full_path, 'rb') as binary_data:
-        s3.Bucket(bucket_name).put_object(Key=tar_name, Body=binary_data)
+        s3.Bucket(bucket_name).put_object(Key='{0}/{1}'.format(operation_type, tar_name), Body=binary_data)
 
 
 def clean_pdf_folder():
@@ -75,7 +75,7 @@ def implement_task(task):
         pdf_to_txt(pdf_name)
     else:
         log.warning('the task {0}-{1} is known type'.format(task_type, task_url))
-    upload_file_to_s3()
+    upload_file_to_s3(pdf_name, task_type)
     task.delete()
 
 
