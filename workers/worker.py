@@ -75,7 +75,7 @@ def run():
     while True:
         task = get_task_message()
         if task:
-            implement_task()
+            implement_task(task)
 
 
 def worker_main():
