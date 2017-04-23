@@ -2,7 +2,7 @@ import boto3
 import json
 import urllib2
 from logger.logger import Logger
-from setting import pdf_default_name, download_pdf_dic
+from setting import download_pdf_dic
 from pdf_to_htm import ConvetToHtml
 from pdf_to_img import ConvetToImg
 from pdf_to_txt import pdf_to_txt
@@ -20,14 +20,14 @@ def clean_pdf_folder():
     pass
 
 
-def download_pdf(task_pdf):
+def download_pdf(task_pdf, pdf_name):
     """
     download the file from the web
     :param task_pdf: list of [task_type, pdf_url]
     :return: None
     """
     response = urllib2.urlopen(task_pdf)
-    with open('{0}/{1}'.format(download_pdf_dic, pdf_default_name), 'w') as pdf_file:
+    with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w') as pdf_file:
         pdf_file.write(response.read())
 
 
@@ -41,7 +41,7 @@ def implement_task(task):
     task_type, task_url = json.loads(task.body)
     # parser the pdf name from pdf_url
     pdf_name = task_url.split('/')[-1][:-4]
-    download_pdf(task_url)
+    download_pdf(task_url, pdf_name)
     if task_type == 'ToImage':
         ConvetToHtml(pdf_name)
     elif task_type == 'ToHTML':
