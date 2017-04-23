@@ -55,9 +55,9 @@ def implement_task(task):
     pdf_name = task_url.split('/')[-1][:-4]
     download_pdf(task_url, pdf_name)
     if task_type == 'ToImage':
-        pdf_to_html(pdf_name)
-    elif task_type == 'ToHTML':
         pdf_to_png(pdf_name)
+    elif task_type == 'ToHTML':
+        pdf_to_html(pdf_name)
     elif task_type == 'ToText':
         pdf_to_txt(pdf_name)
     else:
