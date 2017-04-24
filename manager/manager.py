@@ -1,4 +1,10 @@
 import json
+# this is a small hack so the worker will add the working dic to the sys file path
+import sys
+import os
+cwd = os.getcwd()
+sys.path.append(cwd)
+
 from logger.logger import Logger
 from global_setting.setting import bucket_name
 from global_setting.sqs import new_task, new_pdf_tasks
@@ -59,7 +65,7 @@ def start_new_task():
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)
         create_task_obj(pdf_tasks_list, task_id)
-        
+
         task.delete()
     return terminate
 

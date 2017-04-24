@@ -10,7 +10,7 @@ def install_programs():
         try:
             stdout_output = check_output(['sudo', 'apt', 'install', program], stderr=STDOUT)
         except CalledProcessError as ex:
-            log.critical('deploy failed')
+            log.critical('deploy_worker.txt failed')
             log.critical(ex.message)
             exit(-1)
 

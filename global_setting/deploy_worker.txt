@@ -1,0 +1,3 @@
+#!/bin/bash
+git clone https://github.com/noam-stein/dsp_Assignment_1.git
+cd  ./dsp_Assignment_1 ; ipython ./dsp_Assignment_1/workers/worker.py

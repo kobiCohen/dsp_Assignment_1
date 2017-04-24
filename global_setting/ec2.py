@@ -1,7 +1,8 @@
 import boto3
 from setting import ami, security_group_ids, key_name, instance_type
 
-ec2 = boto3.client('ec2')
+
+ec2 = boto3.resource('ec2')
 
 machine_list = []
 
@@ -9,17 +10,18 @@ def deploy_script(type):
     deploy = None
     if type == 'worker':
         deploy = """#!/bin/bash
-        git clone https://github.com/noam-stein/dsp_Assignment_1.git
-        ipython ./dsp_Assignment_1/workers/worker.py"""
+        export PYTHONPATH=/home/ec2-user/nasa
+        cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git
+        cd /home/ubuntu/dsp_Assignment_1; python ./workers/worker.py
+        """
     elif type == 'manager':
-        deploy = """#!/bin/bash
-              git clone https://github.com/noam-stein/dsp_Assignment_1.git
+        deploy = """#!/bin/bash \n
+              git clone https://github.com/noam-stein/dsp_Assignment_1.git \n
               ipython ./dsp_Assignment_1/manager/manager.py"""
     return deploy
 
-
-def create_instances(type, number_of_instances):
-    script = deploy_script(type)
+def create_instances(instances_type, number_of_instances):
+    script = deploy_script(instances_type)
     instance = ec2.create_instances(
         ImageId=ami,
         MinCount=number_of_instances,
@@ -28,7 +30,6 @@ def create_instances(type, number_of_instances):
         SecurityGroupIds=security_group_ids,
         KeyName=key_name,
         InstanceType=instance_type)
-
     machine_list.extend(instance)
 
 
@@ -73,3 +74,6 @@ def create_instances(type, number_of_instances):
     #    ...:     SecurityGroupIds=["sg-becc70d5"],
     #    ...:     KeyName="MyKeyPair",
     #    ...:     InstanceType='t2.micro')"""
+
+if __name__ == '__main__':
+    create_instances('worker', 1)

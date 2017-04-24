@@ -1,7 +1,12 @@
+
 import json
 import urllib2
 from subprocess import check_call
-
+# this is a small hack so the worker will add the working dic to the sys file path
+import sys
+import os
+cwd = os.getcwd()
+sys.path.append(cwd)
 from logger.logger import Logger
 from pdf_to_htm import pdf_to_html
 from pdf_to_img import pdf_to_png
@@ -9,6 +14,7 @@ from pdf_to_txt import pdf_to_txt
 from global_setting.setting import download_pdf_dic, convert_pdf_dic
 from global_setting.sqs import done_pdf_tasks, new_pdf_tasks
 from global_setting.s3 import upload_file
+
 log = Logger('worker')
 
 
@@ -51,10 +57,6 @@ def clean_pdf_folder():
     check_call('sudo rm -fr {0}'.format(convert_pdf_dic), shell=True)
     check_call('mkdir -p {0}'.format(download_pdf_dic), shell=True)
     check_call('mkdir -p {0}'.format(convert_pdf_dic), shell=True)
-
-# def create_pdf_folder():
-#     check_call(['mkdir', 'rm', '-r', '{0}/'.format(download_pdf_dic)])
-#     check_call(['mkkdir', 'rm', '-r', '{0}/'.format(convert_pdf_dic)])
 
 
 def download_pdf(task_pdf, pdf_name):
@@ -125,7 +127,7 @@ def run():
 
 def worker_main():
     """
-    first the main deploy in EC2 (install all the dependency
+    first the main deploy_worker.txt in EC2 (install all the dependency
     then import all the packages
     the call the main loop aka run
     :return: None
