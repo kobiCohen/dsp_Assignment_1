@@ -72,7 +72,8 @@ def download_pdf(task_pdf, pdf_name):
         log.critical('can\'t download pdf: {0}'.format(pdf_name))
         return False
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
-        pdf_file.write(response.read()
+        pdf_file.write(response.read())
+
     return True
 
 
