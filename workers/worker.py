@@ -7,6 +7,7 @@ import sys
 import os
 cwd = os.getcwd()
 sys.path.append(cwd)
+
 from logger.logger import Logger
 from pdf_to_htm import pdf_to_html
 from pdf_to_img import pdf_to_png
@@ -63,15 +64,16 @@ def download_pdf(task_pdf, pdf_name):
     """
     download the file from the web
     :param task_pdf: list of [task_type, pdf_url]
-    :return: None
+    :return: if download successfully return True otherwise false
     """
     try:
         response = urllib2.urlopen(task_pdf)
     except urllib2.HTTPError as ex:
         log.critical('can\'t download pdf: {0}'.format(pdf_name))
-        return None
+        return False
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
-        pdf_file.write(response.read())
+        pdf_file.write(response.read()
+    return True
 
 
 def implement_task(task):
@@ -86,7 +88,7 @@ def implement_task(task):
     # parser the pdf name from pdf_url
     pdf_name = task_url.split('/')[-1][:-4]
     log.info('received new message: {0}'.format(task_url))
-    if download_pdf(task_url, pdf_name) is not None:
+    if download_pdf(task_url, pdf_name) is True:
         task.delete()
         if task_type == 'ToImage':
             pdf_to_png(pdf_name)

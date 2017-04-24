@@ -12,7 +12,7 @@ def deploy_script(type):
         deploy = """#!/bin/bash
         export PYTHONPATH=/home/ec2-user/nasa
         cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git
-        cd /home/ubuntu/dsp_Assignment_1; python ./workers/worker.py
+        cd /home/ubuntu/dsp_Assignment_1; chmod 777 /home/ubuntu/dsp_Assignment_1 -R; python ./workers/worker.py &> /home/ubuntu/log.txt
         """
     elif type == 'manager':
         deploy = """#!/bin/bash \n
@@ -70,7 +70,7 @@ def create_instances(instances_type, number_of_instances):
     #    ...:     ImageId='ami-86825ee9',
     #    ...:     MinCount=1,
     #    ...:     MaxCount=1,
-    #    ...:     UserData="#!/bin/bash  mkdir -p ~/t/d/s",
+    #    ...:         UserData="#!/bin/bash  mkdir -p ~/t/d/s",
     #    ...:     SecurityGroupIds=["sg-becc70d5"],
     #    ...:     KeyName="MyKeyPair",
     #    ...:     InstanceType='t2.micro')"""
