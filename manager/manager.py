@@ -1,13 +1,14 @@
-import boto3
 import json
 from logger.logger import Logger
 from global_setting.setting import bucket_name
-
-s3 = boto3.resource('s3')
+from global_setting.sqs import new_task, new_pdf_tasks
+from global_setting.s3 import download_file
+from task import Task
 
 log = Logger('manager')
+
 # this list old all the task_jobs
-tasks_jobs_list = []
+tasks_obj_dic = {}
 
 
 def get_new_message(sqs_queue):
@@ -24,18 +25,21 @@ def get_new_message(sqs_queue):
         return None
 
 
-def send_pdf_tasks_to_workers(task_job):
-    pass
+def send_pdf_tasks_to_workers(pdf_task_list):
+    for task in pdf_task_list:
+        task_json = json.dumps(task)
+        new_pdf_tasks.send_message(MessageBody=task_json)
 
 
 def create_task_obj(pdf_tasks_list, task_id):
-    pass
+    new_task_obj = Task(pdf_tasks_list, task_id)
+    tasks_obj_dic[task_id] = new_task_obj
 
 
 def get_pdf_tasks(s3_txt_loc, task_id):
     task_list = []
     local_txt_loc = '/tmp/{0}.txt'.format(task_id)
-    s3.meta.client.download_file(bucket_name, s3_txt_loc, local_txt_loc)
+    download_file(s3_txt_loc, local_txt_loc)
     with open(local_txt_loc, 'r') as task_file:
         for line in task_file.readlines():
             job_type, url = line.split('\n')[0].split('\t')
@@ -54,8 +58,8 @@ def start_new_task():
         txt_loc, task_id, terminate, number_of_workers = json.loads(task.body)
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)
-        new_task_obj = create_task_obj(pdf_tasks_list, task_id)
-        tasks_jobs_list.append(new_task_obj)
+        create_task_obj(pdf_tasks_list, task_id)
+        
         task.delete()
     return terminate
 

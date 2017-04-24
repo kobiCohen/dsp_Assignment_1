@@ -2,17 +2,14 @@ import json
 import urllib2
 from subprocess import check_call
 
-import boto3
-
 from logger.logger import Logger
 from pdf_to_htm import pdf_to_html
 from pdf_to_img import pdf_to_png
 from pdf_to_txt import pdf_to_txt
-from global_setting.setting import download_pdf_dic, convert_pdf_dic, bucket_name
-
-sqs = boto3.resource('sqs')
-s3 = boto3.resource('s3')
-log = Logger()
+from global_setting.setting import download_pdf_dic, convert_pdf_dic
+from global_setting.sqs import done_pdf_tasks, new_pdf_tasks
+from global_setting.s3 import upload_file
+log = Logger('worker')
 
 
 def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id):
@@ -39,10 +36,9 @@ def upload_file_to_s3(pdf_name, operation_type):
     tar_name = '{0}.tar.gz'.format(pdf_name)
     tar_full_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
     check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
-    file_loc = '{0}/{1}'.format(operation_type, tar_name)
-    with open(tar_full_path, 'rb') as binary_data:
-        s3.Bucket(bucket_name).put_object(Key=file_loc, Body=binary_data)
-    return file_loc
+    s3_file_loc = '{0}/{1}'.format(operation_type, tar_name)
+    upload_file(tar_full_path, s3_file_loc)
+    return s3_file_loc
 
 
 def clean_pdf_folder():
@@ -121,7 +117,6 @@ def run():
     will stop only when the worker is shutdown
     :return: None
     """
-    # import pudb;pu.db
     while True:
         task = get_task_message()
         if task:
