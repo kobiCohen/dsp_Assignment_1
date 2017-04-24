@@ -26,7 +26,7 @@ from global_setting.setting import download_pdf_dic, convert_pdf_dic
 def pdf_to_txt(pdf_name):
     pdf_path = '{0}/{1}.pdf'.format(download_pdf_dic, pdf_name)
     txt_path = '{0}/{1}.txt'.format(convert_pdf_dic, pdf_name)
-    check_call('pdftotext -l 1 {0} {1}'.format(pdf_path, txt_path))
+    check_call('pdftotext -l 1 {0} {1}'.format(pdf_path, txt_path),shell=True)
     return txt_path
 
 
