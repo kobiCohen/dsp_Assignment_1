@@ -18,8 +18,9 @@
 #     return txt_path
 #
 
-from setting import download_pdf_dic, convert_pdf_dic
 from subprocess import check_call
+
+from global_setting.setting import download_pdf_dic, convert_pdf_dic
 
 
 def pdf_to_txt(pdf_name):

@@ -4,9 +4,10 @@ import socket
 
 class Logger(object):
 
-    def __init__(self):
+    def __init__(self, machine_job):
         # get the machine ip
         self.ip = socket.gethostbyname(socket.gethostname())
+        self.machine_job = machine_job
         sqs = boto3.resource('sqs')
         self.info_sqs = sqs.create_queue(QueueName='info_sqs')
         self.warning_sqs = sqs.create_queue(QueueName='warning_sqs')
@@ -25,5 +26,6 @@ class Logger(object):
         self.critical_sqs.send_message(MessageBody=message)
 
     def create_message(self, message):
-        new_message = '{ip}:{message}'.format(ip=self.ip, message=message)
+        new_message = '{job}-{ip}:{message}'\
+            .format(job=self.machine_job, ip=self.ip, message=message)
         return new_message

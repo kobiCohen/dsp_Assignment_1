@@ -1,31 +1,48 @@
-import boto3
 import json
 import urllib2
+from subprocess import check_call
+
+import boto3
+
 from logger.logger import Logger
-from setting import download_pdf_dic, convert_pdf_dic, bucket_name
 from pdf_to_htm import pdf_to_html
 from pdf_to_img import pdf_to_png
 from pdf_to_txt import pdf_to_txt
-from subprocess import check_call
-
+from global_setting.setting import download_pdf_dic, convert_pdf_dic, bucket_name
 
 sqs = boto3.resource('sqs')
 s3 = boto3.resource('s3')
-task_sqs = sqs.create_queue(QueueName='task_sqs')
 log = Logger()
+
+
+def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id):
+    """
+    send to the done pdf task a done messge int the format 
+    [pdf_loc_in_s3, task_type, task_url]
+    :param pdf_loc_in_s3:  the loc in s3
+    :param task_type:  the type to html and etc
+    :param task_url:  the url of the pdf
+    :param task_group_id: the id for the return
+    :return: None
+    """
+    message = '[{0}, {1}, {2}, {3}]'.format(pdf_loc_in_s3, task_type, task_url, task_group_id)
+    done_pdf_tasks.send_message(MessageBody=message)
 
 
 def upload_file_to_s3(pdf_name, operation_type):
     """
     tar new object and upload it to s3
     :param pdf_name: the pdf name
-    :return: None
+    :param operation_type: 
+    :return: return a string, where the file is in s3 
     """
     tar_name = '{0}.tar.gz'.format(pdf_name)
     tar_full_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
     check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
+    file_loc = '{0}/{1}'.format(operation_type, tar_name)
     with open(tar_full_path, 'rb') as binary_data:
-        s3.Bucket(bucket_name).put_object(Key='{0}/{1}'.format(operation_type, tar_name), Body=binary_data)
+        s3.Bucket(bucket_name).put_object(Key=file_loc, Body=binary_data)
+    return file_loc
 
 
 def clean_pdf_folder():
@@ -50,7 +67,11 @@ def download_pdf(task_pdf, pdf_name):
     :param task_pdf: list of [task_type, pdf_url]
     :return: None
     """
-    response = urllib2.urlopen(task_pdf)
+    try:
+        response = urllib2.urlopen(task_pdf)
+    except urllib2.HTTPError as ex:
+        log.critical('can\'t download pdf: {0}'.format(pdf_name))
+        return None
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
         pdf_file.write(response.read())
 
@@ -58,34 +79,36 @@ def download_pdf(task_pdf, pdf_name):
 def implement_task(task):
     """
     implement task the pdf task
-    :param task: json string [task_type, pdf_url]
+    :param task: json string [task_type, pdf_url, task_group_id]
     :return: None
     """
     clean_pdf_folder()
     # convert json string to python object
-    task_type, task_url = json.loads(task.body)
+    task_type, task_url, task_group_id = json.loads(task.body)
     # parser the pdf name from pdf_url
     pdf_name = task_url.split('/')[-1][:-4]
-    download_pdf(task_url, pdf_name)
-    if task_type == 'ToImage':
-        pdf_to_png(pdf_name)
-    elif task_type == 'ToHTML':
-        pdf_to_html(pdf_name)
-    elif task_type == 'ToText':
-        pdf_to_txt(pdf_name)
-    else:
-        log.warning('the task {0}-{1} is known type'.format(task_type, task_url))
-    upload_file_to_s3(pdf_name, task_type)
+    log.info('received new message: {0}'.format(task_url))
+    if download_pdf(task_url, pdf_name) is not None:
+        task.delete()
+        if task_type == 'ToImage':
+            pdf_to_png(pdf_name)
+        elif task_type == 'ToHTML':
+            pdf_to_html(pdf_name)
+        elif task_type == 'ToText':
+            pdf_to_txt(pdf_name)
+        else:
+            log.warning('the task {0}-{1} is known type'.format(task_type, task_url))
+        pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type)
+        send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id)
     task.delete()
 
 
 def get_task_message():
     """
     get one task from the task sqs queue.
-    and convert it from json to python structure
     :return: one sqs message and if the queue os empty return None
     """
-    task = task_sqs.receive_messages(1)
+    task = new_pdf_tasks.receive_messages(1)
     if len(task) > 0:
         return task[0]
     else:
@@ -98,7 +121,7 @@ def run():
     will stop only when the worker is shutdown
     :return: None
     """
-    import pudb;pu.db
+    # import pudb;pu.db
     while True:
         task = get_task_message()
         if task:
