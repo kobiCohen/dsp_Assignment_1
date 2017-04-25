@@ -2,9 +2,9 @@
 import json
 import urllib2
 from subprocess import check_call
-# this is a small hack so the worker will add the working dic to the sys file path
 import sys
 import os
+# this is a small hack so the worker will add the working dic to the sys file path
 cwd = os.getcwd()
 sys.path.append(cwd)
 
@@ -29,8 +29,9 @@ def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id):
     :param task_group_id: the id for the return
     :return: None
     """
-    message = '[{0}, {1}, {2}, {3}]'.format(task_type, pdf_loc_in_s3, task_url, task_group_id)
-    done_pdf_tasks.send_message(MessageBody=message)
+    message = [task_type, pdf_loc_in_s3, task_url, task_group_id]
+
+    done_pdf_tasks.send_message(MessageBody=json.dumps(message))
 
 
 def upload_file_to_s3(pdf_name, operation_type):

@@ -1,7 +1,9 @@
 import json
-# this is a small hack so the worker will add the working dic to the sys file path
+import thread
+import threading
 import sys
 import os
+# this is a small hack so the worker will add the working dic to the sys file path
 cwd = os.getcwd()
 sys.path.append(cwd)
 
@@ -38,6 +40,7 @@ def all_task_are_done():
         False
 
 
+
 def send_pdf_tasks_to_workers(pdf_task_list):
     for task in pdf_task_list:
         task_json = json.dumps(task)
@@ -47,7 +50,6 @@ def send_pdf_tasks_to_workers(pdf_task_list):
 def create_task_obj(pdf_tasks_list, task_id):
     new_task_obj = Task(pdf_tasks_list, task_id)
     tasks_obj_dic[task_id] = new_task_obj
-
 
 def get_pdf_tasks(s3_txt_loc, task_id):
     task_list = []
@@ -61,9 +63,8 @@ def get_pdf_tasks(s3_txt_loc, task_id):
     return task_list
 
 
-def start_new_task():
+def start_new_task(terminate):
     task = get_new_message(new_task)
-    terminate = False
     # enter the if statement only if task is not None
     if task:
         # convert the json to python object
@@ -81,7 +82,7 @@ def start_new_task():
 
 
 def check_if_task_done():
-    for pdf_task in tasks_obj_dic.keys():
+    for pdf_task in tasks_obj_dic.values():
         if pdf_task.all_task_done():
             queue = get_sqs_queue(pdf_task.job_id())
             queue.send_message(MessageBody=pdf_task.get_summary_report())
@@ -95,29 +96,44 @@ def get_all_pdf_task_from_workers():
         # if the message queue is empty exit
         if pdf_task_message is None:
             break
-        task_type, pdf_loc_in_s3,  task_url, task_group_id = json.loads(pdf_task_message.body)
+        try:
+            print pdf_task_message.body
+            task_type, pdf_loc_in_s3,  task_url, task_group_id = json.loads(pdf_task_message.body)
+        except Exception as ex:
+            raise ex
         pdf_task_message.delete()
         new_pdf_done_task = [task_type, pdf_loc_in_s3,  task_url, task_group_id]
         tasks_obj_dic[task_group_id].add_new_done_message(new_pdf_done_task)
 
 
-def main_loop():
+def get_pdf_message():
+    while True:
+        get_all_pdf_task_from_workers()
+        check_if_task_done()
+
+
+def send_message():
     terminate = False
     while True:
         if terminate is False:
-            terminate = start_new_task()
-        get_all_pdf_task_from_workers()
-        check_if_task_done()
+            terminate = start_new_task(terminate)
         if terminate is True and all_task_are_done():
             delete_all_workers()
 
 
+def main_loop():
+    thread.start_new_thread(get_pdf_message, ())
+    send_message()
+    # get_pdf_message()
+    # send_message()
+
+
 # you will enter the if statement only when the module is main
 if __name__ == "__main__":
-    try:
-        main_loop()
-    except Exception as ex:
-        log.exception(ex, info='this Exception is main, the manager cant recover \n good but cruel world\n')
+    # try:
+    main_loop()
+    # except Exception as ex:
+    #     log.exception(ex, info='this Exception is main, the manager cant recover \n good but cruel world\n')
 
 
 
