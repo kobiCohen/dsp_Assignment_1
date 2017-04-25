@@ -115,8 +115,7 @@ def main_loop():
 # you will enter the if statement only when the module is main
 if __name__ == "__main__":
     try:
-        # main_loop()
-        assert 1 == 30
+        main_loop()
     except Exception as ex:
         log.exception(ex, info='this Exception is main, the manager cant recover \n good but cruel world\n')
 

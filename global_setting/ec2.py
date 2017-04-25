@@ -35,7 +35,7 @@ def create_instances(instances_type, number_of_instances):
     :return: None
     """
     #TODO: need to inc the number of instances until then hack
-    if number_of_instances + len(worker_machine_list) + 1 >= 10:
+    if number_of_instances + len(worker_machine_list) + 1 >= 10 and instances_type == 'worker':
         number_of_instances = 10 - (len(worker_machine_list) + 1)
 
     script = deploy_script(instances_type)
