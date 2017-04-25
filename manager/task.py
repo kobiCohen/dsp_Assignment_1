@@ -1,3 +1,6 @@
+import json
+
+
 class Task(object):
 
     def __init__(self, task_list, job_id):
@@ -13,3 +16,10 @@ class Task(object):
             return True
         else:
             return False
+
+    def get_summary_report(self):
+        return json.dumps(self.message_done)
+
+    @property
+    def job_id(self):
+        return self.job_id

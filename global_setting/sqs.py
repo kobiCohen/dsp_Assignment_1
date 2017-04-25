@@ -18,3 +18,12 @@ def purge_all_queue():
         except boto3.ClientError as ex:
             #TODO: add print to logger
             pass
+
+
+def get_sqs_queue(queue_name):
+    """
+    get a sqs
+    :param queue_id: string: the wanted name of the queue
+    :return: new aws sqs object 
+    """
+    return sqs.create_queue(QueueName=queue_name)

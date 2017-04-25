@@ -6,9 +6,9 @@ cwd = os.getcwd()
 sys.path.append(cwd)
 
 from logger.logger import Logger
-from global_setting.setting import bucket_name
-from global_setting.sqs import new_task, new_pdf_tasks
+from global_setting.sqs import new_task, new_pdf_tasks, done_pdf_tasks, get_sqs_queue
 from global_setting.s3 import download_file
+from global_setting.ec2 import create_instances, get_number_of_worker, delete_all_workers
 from task import Task
 
 log = Logger('manager')
@@ -29,6 +29,13 @@ def get_new_message(sqs_queue):
         return message[0]
     else:
         return None
+
+
+def all_task_are_done():
+    if len(tasks_obj_dic) == 0:
+        return True
+    else:
+        False
 
 
 def send_pdf_tasks_to_workers(pdf_task_list):
@@ -65,17 +72,33 @@ def start_new_task():
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)
         create_task_obj(pdf_tasks_list, task_id)
-
+        number_of_needed_machine = int(len(pdf_tasks_list) / number_of_workers)
+        difference_between_machine = number_of_needed_machine - get_number_of_worker()
+        if difference_between_machine > 0:
+            create_instances('worker', difference_between_machine)
         task.delete()
     return terminate
 
 
 def check_if_task_done():
-    pass
+    for pdf_task in tasks_obj_dic.keys():
+        if pdf_task.all_task_done():
+            queue = get_sqs_queue(pdf_task.job_id)
+            queue.send_message(MessageBody=pdf_task.get_summary_report())
+            # remove the done task from the task dic
+            tasks_obj_dic.pop(pdf_task.task_id)
 
 
 def get_all_pdf_task_from_workers():
-    pass
+    while True:
+        pdf_task_message = get_new_message(done_pdf_tasks)
+        # if the message queue is empty exit
+        if pdf_task_message is None:
+            break
+        task_type, pdf_loc_in_s3,  task_url, task_group_id = json.loads(pdf_task_message.body)
+        pdf_task_message.delete()
+        new_pdf_done_task = [task_type, pdf_loc_in_s3,  task_url, task_group_id]
+        tasks_obj_dic[task_group_id].add_new_done_message(new_pdf_done_task)
 
 
 def main_loop():
@@ -85,17 +108,12 @@ def main_loop():
             terminate = start_new_task()
         get_all_pdf_task_from_workers()
         check_if_task_done()
-        # if terminate is True and all_task_are_done():
-        #     terminate_workers()
-        #     terminate_manager()
-
-
-def manager_main():
-    main_loop()
+        if terminate is True and all_task_are_done():
+            delete_all_workers()
 
 
 # you will enter the if statement only when the module is main
 if __name__ == "__main__":
-    manager_main()
+    main_loop()
 
 

@@ -10,18 +10,29 @@ class Logger(object):
         self.machine_job = machine_job
 
     def info(self, message):
-        message = self.create_message(message)
+        message = self._create_message(message)
         info_sqs.send_message(MessageBody=message)
 
     def warning(self, message):
-        message = self.create_message(message)
+        message = self._create_message(message)
         warning_sqs.send_message(MessageBody=message)
 
     def critical(self, message):
-        message = self.create_message(message)
+        message = self._create_message(message)
         critical_sqs.send_message(MessageBody=message)
 
-    def create_message(self, message):
+    def exception(self, ex, info=''):
+        message = 'exception type: {type}\n ' \
+                  'exception arguments: {arg}\n ' \
+                  'message{str} \n '\
+            .format(type=type(ex),
+                    arg=ex.args,
+                    str=ex)
+        # append the two strings
+        new_message = info + self._create_message(message)
+        critical_sqs.send_message(MessageBody=new_message)
+
+    def _create_message(self, message):
         new_message = '{job}-{ip}:{message}'\
             .format(job=self.machine_job, ip=self.ip, message=message)
         return new_message

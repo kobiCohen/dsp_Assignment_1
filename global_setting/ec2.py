@@ -1,26 +1,39 @@
 import boto3
 from setting import ami, security_group_ids, key_name, instance_type
 
-
 ec2 = boto3.resource('ec2')
 
-machine_list = []
+worker_machine_list = []
+manger_machine = []
 
-def deploy_script(type):
+
+def deploy_script(instances_type):
+    """     
+    return the script for deploy 
+    :param instances_type: string worker|manager
+    :return: a string for deploy worker|manager in the machine
+    """
     deploy = None
-    if type == 'worker':
+    if instances_type == 'worker':
         deploy = """#!/bin/bash
-        export PYTHONPATH=/home/ec2-user/nasa
-        cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git
-        cd /home/ubuntu/dsp_Assignment_1; chmod 777 /home/ubuntu/dsp_Assignment_1 -R; python ./workers/worker.py &> /home/ubuntu/log.txt
+        runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git'
+        runuser -l ubuntu -c 'cd /home/ubuntu/dsp_Assignment_1; python ./workers/worker.py &> /home/ubuntu/log.txt' 
         """
-    elif type == 'manager':
+    elif instances_type == 'manager':
         deploy = """#!/bin/bash \n
-              git clone https://github.com/noam-stein/dsp_Assignment_1.git \n
-              ipython ./dsp_Assignment_1/manager/manager.py"""
+        runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git'
+        runuser -l ubuntu -c 'cd /home/ubuntu/dsp_Assignment_1; python ./manager/manager.py &> /home/ubuntu/log.txt' 
+        """
     return deploy
 
+
 def create_instances(instances_type, number_of_instances):
+    """
+    create new ec2  machine for worker|manager and deploy it
+    :param instances_type: string worker|manager
+    :param number_of_instances: how many machine create
+    :return: None
+    """
     script = deploy_script(instances_type)
     instance = ec2.create_instances(
         ImageId=ami,
@@ -29,51 +42,51 @@ def create_instances(instances_type, number_of_instances):
         UserData=script,
         SecurityGroupIds=security_group_ids,
         KeyName=key_name,
-        InstanceType=instance_type)
-    machine_list.extend(instance)
+        InstanceType=instance_type,
+        TagSpecifications=[
+            {
+                'ResourceType': 'instance',
+                'Tags': [
+                    {
+                        'Key': instances_type,
+                        'Value': instances_type
+                    }
+                ]
+            }
+        ]
+    )
+    if instance_type == 'worker':
+        worker_machine_list.extend(instance)
+    else:
+        manger_machine.append(instance)
 
 
+def delete_all_instances():
+    """
+    terminate all ec2 instances
+    :return: None
+    """
+    for machine in worker_machine_list:
+        machine.terminate()
+    manger_machine[0].terminate()
 
-    #
-    #
-    # """instance = ec2.create_instances(
-    #    ...:     ImageId='ami-86825ee9',
-    #    ...:     MinCount=1,
-    #    ...:     MaxCount=1,
-    #    ...:     UserData="""#!/bin/bash
-    #    ...:     mkdir -p /home/ubuntu/d/t/s""",
-    #    ...:     SecurityGroupIds=["sg-becc70d5"],
-    #    ...:     KeyName="MyKeyPair",
-    #    ...:     InstanceType='t2.micro')"""
-    #
-    # """ instance = ec2.create_instances(
-    #     ...:     ImageId='ami-e4c63e8b',
-    #     ...:     MinCount=1,
-    #     ...:     MaxCount=1,
-    #     ...:     UserData="#!/bin/bash \n mkdir \"
-    #     ...: hwllo word\"",
-    #     ...:     KeyName="MyKeyPair",
-    #     ...:  InstanceType='t2.micro')"""
-    #
-    # "ami-86825ee9"
-    # """instance = ec2.create_instances(
-    #     ...:     ImageId='ami-e4c63e8b',
-    #     ...:     MinCount=1,
-    #     ...:     MaxCount=1,
-    #     ...:     SecurityGroupIds=["sg-becc70d5"],
-    #     ...:
-    #     ...:     KeyName="MyKeyPair",
-    #     ...:     InstanceType='t2.micro')"""
-    #
-    #
-    # """"nstance = ec2.create_instances(
-    #    ...:     ImageId='ami-86825ee9',
-    #    ...:     MinCount=1,
-    #    ...:     MaxCount=1,
-    #    ...:         UserData="#!/bin/bash  mkdir -p ~/t/d/s",
-    #    ...:     SecurityGroupIds=["sg-becc70d5"],
-    #    ...:     KeyName="MyKeyPair",
-    #    ...:     InstanceType='t2.micro')"""
+
+def delete_all_workers():
+    """
+    terminate all worker instances
+    :return: None
+    """
+    for machine in worker_machine_list:
+        machine.terminate()
+
+
+def get_number_of_worker():
+    """
+    get how many worker are running 
+    :return: number  
+    """
+    return len(worker_machine_list)
+
 
 if __name__ == '__main__':
-    create_instances('worker', 1)
+    create_instances('manager', 1)

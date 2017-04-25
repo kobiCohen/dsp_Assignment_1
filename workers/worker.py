@@ -29,7 +29,7 @@ def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id):
     :param task_group_id: the id for the return
     :return: None
     """
-    message = '[{0}, {1}, {2}, {3}]'.format(pdf_loc_in_s3, task_type, task_url, task_group_id)
+    message = '[{0}, {1}, {2}, {3}]'.format(task_type, pdf_loc_in_s3, task_url, task_group_id)
     done_pdf_tasks.send_message(MessageBody=message)
 
 
@@ -68,12 +68,12 @@ def download_pdf(task_pdf, pdf_name):
     """
     try:
         response = urllib2.urlopen(task_pdf)
-    except urllib2.HTTPError as ex:
-        log.critical('can\'t download pdf: {0}'.format(pdf_name))
+    except Exception as ex:
+        log.exception(ex)
         return False
+    log.info('download {} successfully'.format(pdf_name))
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
         pdf_file.write(response.read())
-
     return True
 
 
@@ -86,22 +86,32 @@ def implement_task(task):
     clean_pdf_folder()
     # convert json string to python object
     task_type, task_url, task_group_id = json.loads(task.body)
+    log.info('received new task {0} {1} {2}'.format(task_type, task_url, task_group_id))
     # parser the pdf name from pdf_url
     pdf_name = task_url.split('/')[-1][:-4]
-    log.info('received new message: {0}'.format(task_url))
     if download_pdf(task_url, pdf_name) is True:
+        try:
+            if task_type == 'ToImage':
+                pdf_to_png(pdf_name)
+            elif task_type == 'ToHTML':
+                pdf_to_html(pdf_name)
+            elif task_type == 'ToText':
+                pdf_to_txt(pdf_name)
+            else:
+                log.warning('the task {0}-{1} is of unknown type'.format(task_type, task_url))
+                task.delete()
+
+            pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type)
+            log.info('done with pdf {0}-{1} sending message'.format(task_type, task_url))
+            send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id)
+        except Exception as ex:
+            # if the operation failed exit and don't delete the message
+            log.exception(ex)
+            return False
         task.delete()
-        if task_type == 'ToImage':
-            pdf_to_png(pdf_name)
-        elif task_type == 'ToHTML':
-            pdf_to_html(pdf_name)
-        elif task_type == 'ToText':
-            pdf_to_txt(pdf_name)
-        else:
-            log.warning('the task {0}-{1} is known type'.format(task_type, task_url))
-        pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type)
-        send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id)
-    task.delete()
+    else:
+        # if you cant download the pdf from the web delete the sqs message
+        task.delete()
 
 
 def get_task_message():
@@ -140,6 +150,9 @@ def worker_main():
 
 # you will enter the if statement only when the module is main
 if __name__ == "__main__":
-    worker_main()
+    try:
+        worker_main()
+    except Exception as ex:
+        log.exception(ex, info='this Exception is the main one worker cant recover \n good but cruel world')
 
 
