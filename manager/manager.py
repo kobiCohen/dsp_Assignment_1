@@ -83,7 +83,7 @@ def start_new_task():
 def check_if_task_done():
     for pdf_task in tasks_obj_dic.keys():
         if pdf_task.all_task_done():
-            queue = get_sqs_queue(pdf_task.job_id)
+            queue = get_sqs_queue(pdf_task.job_id())
             queue.send_message(MessageBody=pdf_task.get_summary_report())
             # remove the done task from the task dic
             tasks_obj_dic.pop(pdf_task.task_id)

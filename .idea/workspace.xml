@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60546989-55f0-469c-b392-7ab7735ab073" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/a.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/d.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/global_setting/ec2.py" afterPath="$PROJECT_DIR$/global_setting/ec2.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/global_setting/sqs.py" afterPath="$PROJECT_DIR$/global_setting/sqs.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/logger/logger.py" afterPath="$PROJECT_DIR$/logger/logger.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manager/manager.py" afterPath="$PROJECT_DIR$/manager/manager.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manager/task.py" afterPath="$PROJECT_DIR$/manager/task.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workers/worker.py" afterPath="$PROJECT_DIR$/workers/worker.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -53,8 +47,8 @@
       <file leaf-file-name="task.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/manager/task.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="350">
-              <caret line="19" column="26" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="26" />
+            <state relative-caret-position="358">
+              <caret line="22" column="14" lean-forward="false" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -63,8 +57,8 @@
       <file leaf-file-name="manager.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/manager/manager.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="746">
-              <caret line="92" column="11" lean-forward="false" selection-start-line="92" selection-start-column="10" selection-end-line="92" selection-end-column="11" />
+            <state relative-caret-position="145">
+              <caret line="84" column="36" lean-forward="true" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -173,11 +167,11 @@
         <option value="$PROJECT_DIR$/d.py" />
         <option value="$PROJECT_DIR$/workers/pdf_to_txt.py" />
         <option value="$PROJECT_DIR$/global_setting/sqs.py" />
-        <option value="$PROJECT_DIR$/manager/task.py" />
-        <option value="$PROJECT_DIR$/manager/manager.py" />
         <option value="$PROJECT_DIR$/workers/worker.py" />
         <option value="$PROJECT_DIR$/logger/logger.py" />
         <option value="$PROJECT_DIR$/global_setting/ec2.py" />
+        <option value="$PROJECT_DIR$/manager/task.py" />
+        <option value="$PROJECT_DIR$/manager/manager.py" />
       </list>
     </option>
   </component>
@@ -864,14 +858,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/manager/task.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="350">
-          <caret line="19" column="26" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/workers/worker.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2860">
@@ -892,10 +878,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/manager/task.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="358">
+          <caret line="22" column="14" lean-forward="false" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/manager/manager.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="746">
-          <caret line="92" column="11" lean-forward="false" selection-start-line="92" selection-start-column="10" selection-end-line="92" selection-end-column="11" />
+        <state relative-caret-position="145">
+          <caret line="84" column="36" lean-forward="true" selection-start-line="84" selection-start-column="36" selection-end-line="84" selection-end-column="36" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
