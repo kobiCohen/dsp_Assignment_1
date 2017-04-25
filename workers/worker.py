@@ -153,6 +153,6 @@ if __name__ == "__main__":
     try:
         worker_main()
     except Exception as ex:
-        log.exception(ex, info='this Exception is the main one worker cant recover \n good but cruel world')
+        log.exception(ex, info='this Exception is main, the worker cant recover \n good but cruel world')
 
 

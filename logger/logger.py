@@ -1,5 +1,6 @@
 import boto3
 import socket
+import traceback
 from global_setting.sqs import info_sqs, warning_sqs, critical_sqs
 
 class Logger(object):
@@ -24,12 +25,14 @@ class Logger(object):
     def exception(self, ex, info=''):
         message = 'exception type: {type}\n ' \
                   'exception arguments: {arg}\n ' \
-                  'message{str} \n '\
+                  'message{str} \n\n\n ' \
+                  '\t bt: \n {bt}'\
             .format(type=type(ex),
                     arg=ex.args,
-                    str=ex)
+                    str=ex,
+                    bt=traceback.extract_stack())
         # append the two strings
-        new_message = info + self._create_message(message)
+        new_message = self._create_message(info+message)
         critical_sqs.send_message(MessageBody=new_message)
 
     def _create_message(self, message):
