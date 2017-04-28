@@ -20,5 +20,5 @@ class Task(object):
     def get_summary_report(self):
         return json.dumps(self.message_done)
 
-    def job_id(self):
-        return self.job_id
+    def get_job_id(self):
+            return self.job_id

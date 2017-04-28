@@ -93,4 +93,4 @@ def get_number_of_worker():
 
 
 if __name__ == '__main__':
-    create_instances('manager', 1)
+    create_instances('worker', 2)

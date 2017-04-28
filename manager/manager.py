@@ -16,7 +16,16 @@ from task import Task
 log = Logger('manager')
 
 # this list old all the task_jobs
+
 tasks_obj_dic = {}
+
+
+class TaskDic(object):
+    tasks_obj_dic = {}
+
+    def __init__(self):
+        self.montiner = threading.Lock()
+
 
 
 def get_new_message(sqs_queue):
@@ -37,7 +46,7 @@ def all_task_are_done():
     if len(tasks_obj_dic) == 0:
         return True
     else:
-        False
+        return False
 
 
 def send_pdf_tasks_to_workers(pdf_task_list):
@@ -84,10 +93,10 @@ def start_new_task(terminate):
 def check_if_task_done():
     for pdf_task in tasks_obj_dic.values():
         if pdf_task.all_task_done():
-            queue = get_sqs_queue(pdf_task.job_id())
+            queue = get_sqs_queue(pdf_task.job_id)
             queue.send_message(MessageBody=pdf_task.get_summary_report())
             # remove the done task from the task dic
-            tasks_obj_dic.pop(pdf_task.task_id)
+            tasks_obj_dic.pop(pdf_task.get_job_id())
 
 
 def get_all_pdf_task_from_workers():

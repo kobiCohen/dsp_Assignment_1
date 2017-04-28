@@ -68,14 +68,17 @@ def download_pdf(task_pdf, pdf_name):
     :param task_pdf: list of [task_type, pdf_url]
     :return: if download successfully return True otherwise false
     """
+    log.info('trying to download {}'.format(pdf_name))
     try:
         response = urllib2.urlopen(task_pdf)
     except urllib2.HTTPError as ex:
         log.exception(ex, info='cant download pdf file: {}'.format(task_pdf))
         return False
     log.info('download {} successfully'.format(pdf_name))
+    log.info('going to write to file the pdf'.format(pdf_name))
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
         pdf_file.write(response.read())
+    log.info('done writing to file the pdf'.format(pdf_name))
     return True
 
 
@@ -140,6 +143,7 @@ def get_task_message():
 def run():
     """
     this is the worker main loop,
+    this is the worker main loop,
     will stop only when the worker is shutdown
     :return: None
     """
@@ -157,14 +161,14 @@ def worker_main():
     :return: None
     """
     log.info('worker start is life cycle')
-    run()
+    try:
+        run()
+    except Exception as ex:
+        log.exception(ex, info='this Exception is main')
+        run()
 
 # you will enter the if statement only when the module is main
 if __name__ == "__main__":
-    try:
-        worker_main()
-    except Exception as ex:
-        log.exception(ex, info='this Exception is main')
-        worker_main()
+    worker_main()
 
 
