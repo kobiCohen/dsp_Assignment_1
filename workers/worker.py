@@ -70,8 +70,8 @@ def download_pdf(task_pdf, pdf_name):
     """
     log.info('trying to download {}'.format(pdf_name))
     try:
-        response = urllib2.urlopen(task_pdf)
-    except urllib2.HTTPError as ex:
+        response = urllib2.urlopen(task_pdf, timeout=5)
+    except Exception as ex:
         log.exception(ex, info='cant download pdf file: {}'.format(task_pdf))
         return False
     log.info('download {} successfully'.format(pdf_name))
