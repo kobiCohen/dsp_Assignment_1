@@ -7,19 +7,19 @@ worker_machine_list = []
 manger_machine = []
 
 
-def deploy_script(instances_type):
+def deploy_script(machine_type):
     """     
     return the script for deploy 
     :param instances_type: string worker|manager
     :return: a string for deploy worker|manager in the machine
     """
     deploy = None
-    if instances_type == 'worker':
+    if machine_type == 'worker':
         deploy = """#!/bin/bash
         runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git'
         runuser -l ubuntu -c 'cd /home/ubuntu/dsp_Assignment_1; python ./workers/worker.py &> /home/ubuntu/log.txt' 
         """
-    elif instances_type == 'manager':
+    elif machine_type == 'manager':
         deploy = """#!/bin/bash \n
         runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git'
         runuser -l ubuntu -c 'cd /home/ubuntu/dsp_Assignment_1; python ./manager/manager.py &> /home/ubuntu/log.txt' 
@@ -27,18 +27,23 @@ def deploy_script(instances_type):
     return deploy
 
 
-def create_instances(instances_type, number_of_instances):
+def create_instances(machine_type, number_of_instances):
     """
     create new ec2  machine for worker|manager and deploy it
-    :param instances_type: string worker|manager
+    :param machine_type: string worker|manager
     :param number_of_instances: how many machine create
     :return: None
     """
+
+    if number_of_instances > len(worker_machine_list):
+        number_of_instances = number_of_instances - len(worker_machine_list)
+
+
     #TODO: need to inc the number of instances until then hack
-    if number_of_instances + len(worker_machine_list) + 1 >= 10 and instances_type == 'worker':
+    if number_of_instances + len(worker_machine_list) + 1 >= 10 and machine_type == 'worker':
         number_of_instances = 10 - (len(worker_machine_list) + 1)
 
-    script = deploy_script(instances_type)
+    script = deploy_script(machine_type)
     instance = ec2.create_instances(
         ImageId=ami,
         MinCount=number_of_instances,
@@ -52,17 +57,17 @@ def create_instances(instances_type, number_of_instances):
                 'ResourceType': 'instance',
                 'Tags': [
                     {
-                        'Key': instances_type,
-                        'Value': instances_type
+                        'Key': machine_type,
+                        'Value': machine_type
                     }
                 ]
             }
         ]
     )
-    if instance_type == 'worker':
+    if machine_type == 'worker':
         worker_machine_list.extend(instance)
     else:
-        manger_machine.append(instance)
+        manger_machine.extend(instance)
 
 
 def delete_all_instances():

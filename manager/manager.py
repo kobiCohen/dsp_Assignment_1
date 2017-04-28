@@ -65,8 +65,8 @@ def start_new_task(terminate):
         # the json is in the format [pdf_loc_in_s3, task_id, terminate?, number_of_workers]
         txt_loc, task_id, terminate, number_of_workers = json.loads(task.body)
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
-        send_pdf_tasks_to_workers(pdf_tasks_list)
         create_task_obj(pdf_tasks_list, task_id)
+        send_pdf_tasks_to_workers(pdf_tasks_list)
         number_of_needed_machine = int(len(pdf_tasks_list) / number_of_workers)
         difference_between_machine = number_of_needed_machine - get_number_of_worker()
         if difference_between_machine > 0:

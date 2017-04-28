@@ -22,3 +22,7 @@ class Task(object):
 
     def get_job_id(self):
             return self.job_id
+
+    def update_task_list(self, task_list):
+        self.task_list = task_list
+
