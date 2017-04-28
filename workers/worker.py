@@ -34,7 +34,7 @@ def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, success
     done_pdf_tasks.send_message(MessageBody=json.dumps(message))
 
 
-def upload_file_to_s3(pdf_name, operation_type):
+def upload_file_to_s3(pdf_name, operation_type, task_id):
     """
     tar new object and upload it to s3
     :param pdf_name: the pdf name
@@ -44,7 +44,7 @@ def upload_file_to_s3(pdf_name, operation_type):
     tar_name = '{0}.tar.gz'.format(pdf_name)
     tar_full_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
     check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
-    s3_file_loc = '{0}/{1}'.format(operation_type, tar_name)
+    s3_file_loc = '{0}/{1}/{2}'.format(task_id, operation_type, tar_name)
     log.info('going to upload file {} to s3 under {}'.format(pdf_name, s3_file_loc))
     upload_file(tar_full_path, s3_file_loc)
     return s3_file_loc
@@ -110,7 +110,7 @@ def implement_task(task):
                 send_done_message(None, task_type, task_url, task_group_id, False)
                 task.delete()
 
-            pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type)
+            pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type, task_group_id)
             log.info('done with pdf {0}-{1} sending message'.format(task_type, task_url))
             send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, True)
         except Exception as ex:
