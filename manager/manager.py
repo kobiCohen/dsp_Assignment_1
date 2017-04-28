@@ -23,7 +23,7 @@ def get_new_message(sqs_queue):
     """
     get one message from the sqs_queue
     and convert it from json to python structure
-    :param sqs_queue: a sqs queue
+    :param sqs_queue: sqs queue
     :return: one sqs message and if the queue os empty return None
     """
     message = sqs_queue.receive_messages(1)
@@ -40,7 +40,6 @@ def all_task_are_done():
         False
 
 
-
 def send_pdf_tasks_to_workers(pdf_task_list):
     for task in pdf_task_list:
         task_json = json.dumps(task)
@@ -50,6 +49,7 @@ def send_pdf_tasks_to_workers(pdf_task_list):
 def create_task_obj(pdf_tasks_list, task_id):
     new_task_obj = Task(pdf_tasks_list, task_id)
     tasks_obj_dic[task_id] = new_task_obj
+
 
 def get_pdf_tasks(s3_txt_loc, task_id):
     task_list = []
@@ -98,11 +98,11 @@ def get_all_pdf_task_from_workers():
             break
         try:
             print pdf_task_message.body
-            task_type, pdf_loc_in_s3,  task_url, task_group_id = json.loads(pdf_task_message.body)
+            task_type, pdf_loc_in_s3,  task_url, task_group_id, successfully = json.loads(pdf_task_message.body)
         except Exception as ex:
             raise ex
         pdf_task_message.delete()
-        new_pdf_done_task = [task_type, pdf_loc_in_s3,  task_url, task_group_id]
+        new_pdf_done_task = [task_type, pdf_loc_in_s3,  task_url, task_group_id, successfully]
         tasks_obj_dic[task_group_id].add_new_done_message(new_pdf_done_task)
 
 
@@ -122,6 +122,7 @@ def send_message():
 
 
 def main_loop():
+    log.info('manager start is life cycle')
     thread.start_new_thread(get_pdf_message, ())
     send_message()
     # get_pdf_message()
@@ -130,10 +131,11 @@ def main_loop():
 
 # you will enter the if statement only when the module is main
 if __name__ == "__main__":
-    # try:
-    main_loop()
-    # except Exception as ex:
-    #     log.exception(ex, info='this Exception is main, the manager cant recover \n good but cruel world\n')
+    try:
+        main_loop()
+    except Exception as ex:
+        log.exception(ex, info='this Exception is main, the manager cant recover \n good but cruel world\n')
+        main_loop()
 
 
 

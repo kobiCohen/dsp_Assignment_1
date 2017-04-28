@@ -19,7 +19,7 @@ from global_setting.s3 import upload_file
 log = Logger('worker')
 
 
-def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id):
+def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, successfully):
     """
     send to the done pdf task a done messge int the format 
     [pdf_loc_in_s3, task_type, task_url]
@@ -29,7 +29,7 @@ def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id):
     :param task_group_id: the id for the return
     :return: None
     """
-    message = [task_type, pdf_loc_in_s3, task_url, task_group_id]
+    message = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
 
     done_pdf_tasks.send_message(MessageBody=json.dumps(message))
 
@@ -69,7 +69,7 @@ def download_pdf(task_pdf, pdf_name):
     """
     try:
         response = urllib2.urlopen(task_pdf)
-    except Exception as ex:
+    except urllib2.HTTPError as ex:
         log.exception(ex)
         return False
     log.info('download {} successfully'.format(pdf_name))
@@ -104,14 +104,19 @@ def implement_task(task):
 
             pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type)
             log.info('done with pdf {0}-{1} sending message'.format(task_type, task_url))
-            send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id)
+            send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, True)
         except Exception as ex:
+            # if we failed here, we will have the same error on all the worker.
+            # send failed message
+            send_done_message('none', task_type, task_url, task_group_id, False)
             # if the operation failed exit and don't delete the message
             log.exception(ex)
             return False
         task.delete()
+
     else:
-        # if you cant download the pdf from the web delete the sqs message
+        # if you cant download the pdf from the web delete the sqs messag
+        send_done_message('none', task_type, task_url, task_group_id, False)
         task.delete()
 
 
@@ -155,5 +160,6 @@ if __name__ == "__main__":
         worker_main()
     except Exception as ex:
         log.exception(ex, info='this Exception is main, the worker cant recover \n good but cruel world')
+        worker_main()
 
 

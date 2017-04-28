@@ -2,6 +2,7 @@ import boto3
 import socket
 import traceback
 from global_setting.sqs import info_sqs, warning_sqs, critical_sqs
+import time
 
 class Logger(object):
 
