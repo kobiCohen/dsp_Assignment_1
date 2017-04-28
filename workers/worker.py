@@ -45,6 +45,7 @@ def upload_file_to_s3(pdf_name, operation_type):
     tar_full_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
     check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
     s3_file_loc = '{0}/{1}'.format(operation_type, tar_name)
+    log.info('going to upload file {} to s3 under {}'.format(pdf_name, s3_file_loc))
     upload_file(tar_full_path, s3_file_loc)
     return s3_file_loc
 
@@ -70,7 +71,7 @@ def download_pdf(task_pdf, pdf_name):
     try:
         response = urllib2.urlopen(task_pdf)
     except urllib2.HTTPError as ex:
-        log.exception(ex)
+        log.exception(ex, info='cant download pdf file: {}'.format(task_pdf))
         return False
     log.info('download {} successfully'.format(pdf_name))
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
@@ -93,13 +94,17 @@ def implement_task(task):
     if download_pdf(task_url, pdf_name) is True:
         try:
             if task_type == 'ToImage':
+                log.info('trying to convert to IMG pdf: {0}'.format(pdf_name))
                 pdf_to_png(pdf_name)
             elif task_type == 'ToHTML':
+                log.info('trying to convert to HTML pdf: {0}'.format(pdf_name))
                 pdf_to_html(pdf_name)
             elif task_type == 'ToText':
+                log.info('trying to convert to TXT pdf: {0}'.format(pdf_name))
                 pdf_to_txt(pdf_name)
             else:
                 log.warning('the task {0}-{1} is of unknown type'.format(task_type, task_url))
+                send_done_message(None, task_type, task_url, task_group_id, False)
                 task.delete()
 
             pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type)
@@ -108,9 +113,9 @@ def implement_task(task):
         except Exception as ex:
             # if we failed here, we will have the same error on all the worker.
             # send failed message
-            send_done_message('none', task_type, task_url, task_group_id, False)
+            send_done_message(None, task_type, task_url, task_group_id, False)
             # if the operation failed exit and don't delete the message
-            log.exception(ex)
+            log.exception(ex, info=task.body)
             return False
         task.delete()
 
@@ -159,7 +164,7 @@ if __name__ == "__main__":
     try:
         worker_main()
     except Exception as ex:
-        log.exception(ex, info='this Exception is main, the worker cant recover \n good but cruel world')
+        log.exception(ex, info='this Exception is main')
         worker_main()
 
 

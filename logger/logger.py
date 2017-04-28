@@ -33,7 +33,7 @@ class Logger(object):
                     str=ex,
                     bt=traceback.extract_stack())
         # append the two strings
-        new_message = self._create_message(info+message)
+        new_message = self._create_message(info + '\n' + message)
         critical_sqs.send_message(MessageBody=new_message)
 
     def _create_message(self, message):
