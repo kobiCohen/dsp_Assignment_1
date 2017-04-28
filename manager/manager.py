@@ -1,31 +1,23 @@
 import json
-import thread
-import threading
-import sys
 import os
+import sys
+import thread
+
 # this is a small hack so the worker will add the working dic to the sys file path
 cwd = os.getcwd()
 sys.path.append(cwd)
 
 from logger.logger import Logger
-from global_setting.sqs import new_task, new_pdf_tasks, done_pdf_tasks, get_sqs_queue
+from global_setting.sqs import new_task, new_pdf_tasks, done_pdf_tasks
 from global_setting.s3 import download_file
 from global_setting.ec2 import create_instances, get_number_of_worker, delete_all_workers
 from task import Task
+from task_collection import TaskCollection
 
 log = Logger('manager')
 
 # this list old all the task_jobs
-
-tasks_obj_dic = {}
-
-
-class TaskDic(object):
-    tasks_obj_dic = {}
-
-    def __init__(self):
-        self.montiner = threading.Lock()
-
+task_col = TaskCollection()
 
 
 def get_new_message(sqs_queue):
@@ -42,13 +34,6 @@ def get_new_message(sqs_queue):
         return None
 
 
-def all_task_are_done():
-    if len(tasks_obj_dic) == 0:
-        return True
-    else:
-        return False
-
-
 def send_pdf_tasks_to_workers(pdf_task_list):
     for task in pdf_task_list:
         task_json = json.dumps(task)
@@ -57,7 +42,7 @@ def send_pdf_tasks_to_workers(pdf_task_list):
 
 def create_task_obj(pdf_tasks_list, task_id):
     new_task_obj = Task(pdf_tasks_list, task_id)
-    tasks_obj_dic[task_id] = new_task_obj
+    task_col.add_new_task(task_id, new_task_obj)
 
 
 def get_pdf_tasks(s3_txt_loc, task_id):
@@ -90,15 +75,6 @@ def start_new_task(terminate):
     return terminate
 
 
-def check_if_task_done():
-    for pdf_task in tasks_obj_dic.values():
-        if pdf_task.all_task_done():
-            queue = get_sqs_queue(pdf_task.job_id)
-            queue.send_message(MessageBody=pdf_task.get_summary_report())
-            # remove the done task from the task dic
-            tasks_obj_dic.pop(pdf_task.get_job_id())
-
-
 def get_all_pdf_task_from_workers():
     while True:
         pdf_task_message = get_new_message(done_pdf_tasks)
@@ -106,18 +82,20 @@ def get_all_pdf_task_from_workers():
         if pdf_task_message is None:
             break
         try:
-            task_type, pdf_loc_in_s3,  task_url, task_group_id, successfully = json.loads(pdf_task_message.body)
+            task_type, pdf_loc_in_s3, task_url, task_group_id, successfully = json.loads(pdf_task_message.body)
         except Exception as ex:
-            raise ex
+            log.exception(ex)
+            pdf_task_message.delete()
+            return None
         pdf_task_message.delete()
-        new_pdf_done_task = [task_type, pdf_loc_in_s3,  task_url, task_group_id, successfully]
-        tasks_obj_dic[task_group_id].add_new_done_message(new_pdf_done_task)
+        new_pdf_done_task = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
+        task_col.add_new_pdf_task_done(task_group_id, new_pdf_done_task)
 
 
 def get_pdf_message():
     while True:
         get_all_pdf_task_from_workers()
-        check_if_task_done()
+        task_col.check_if_task_done()
 
 
 def send_message():
@@ -125,7 +103,7 @@ def send_message():
     while True:
         if terminate is False:
             terminate = start_new_task(terminate)
-        if terminate is True and all_task_are_done():
+        if terminate is True and task_col.all_task_are_done():
             delete_all_workers()
 
 
@@ -144,6 +122,3 @@ if __name__ == "__main__":
     except Exception as ex:
         log.exception(ex, info='this Exception is main, the manager cant recover \n good but cruel world\n')
         main_loop()
-
-
-

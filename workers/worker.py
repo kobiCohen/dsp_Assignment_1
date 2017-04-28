@@ -117,8 +117,8 @@ def implement_task(task):
             # if we failed here, we will have the same error on all the worker.
             # send failed message
             send_done_message(None, task_type, task_url, task_group_id, False)
-            # if the operation failed exit and don't delete the message
             log.exception(ex, info=task.body)
+            task.delete()
             return False
         task.delete()
 

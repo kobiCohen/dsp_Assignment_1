@@ -4,6 +4,7 @@ import logging
 import sys
 import os
 
+
 # this is a small hack so the worker will add the working dic to the sys file path
 cwd = os.getcwd()
 sys.path.append(cwd)
@@ -31,8 +32,8 @@ def clean_old_logs():
     for qeue in [info_sqs, warning_sqs, critical_sqs]:
         try:
             qeue.purge()
-        except botocore.errorfactory.PurgeQueueInProgress:
-            pass
+        except Exception as ex:
+            print ex
 
 
 def build_logger():
