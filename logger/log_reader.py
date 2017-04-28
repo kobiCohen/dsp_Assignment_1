@@ -76,6 +76,7 @@ def main_loop():
 
 def main():
     build_logger()
+    # log.setLevel(logging.ERROR)
     main_loop()
 
 
