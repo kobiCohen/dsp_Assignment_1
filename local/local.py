@@ -83,10 +83,6 @@ def local_main():
     """
 
 
-    res = wait_to_end()
-    print res
-    process_res(res)
-"""""
     ec.create_instances("manager", 1)
     args = sys.argv
 
@@ -94,7 +90,10 @@ def local_main():
     open(local_file_loc, 'rb')
     s3.upload_file(local_file_loc, download_pdf_dic)
     send_start_message(download_pdf_dic)
-"""
+
+    res = wait_to_end()
+    process_res(res)
+    print res
 
 
 if __name__ == "__main__":
