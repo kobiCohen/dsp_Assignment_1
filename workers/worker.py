@@ -15,7 +15,7 @@ from pdf_to_txt import pdf_to_txt
 from global_setting.setting import download_pdf_dic, convert_pdf_dic
 from global_setting.sqs import done_pdf_tasks, new_pdf_tasks
 from global_setting.s3 import upload_file
-
+os.environ['S3_USE_SIGV4'] = 'True'
 log = Logger('worker')
 
 

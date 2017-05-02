@@ -18,8 +18,7 @@ log = Logger('manager')
 
 # this list old all the task_jobs
 task_col = TaskCollection()
-
-
+os.environ['S3_USE_SIGV4'] = 'True'
 def get_new_message(sqs_queue):
     """
     get one message from the sqs_queue
