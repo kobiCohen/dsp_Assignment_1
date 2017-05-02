@@ -63,6 +63,7 @@ def wait_to_end():
 
     res = None
     while True:
+        sqs.get_sqs_queue(local_id)
         res = sqs.done_task.receive_messages(1)
         if res:
             break

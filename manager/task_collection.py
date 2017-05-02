@@ -1,6 +1,6 @@
 import threading
 from global_setting.sqs import get_sqs_queue , done_task
-
+import json
 
 class TaskCollection(object):
     tasks_obj_dic = {}
@@ -20,7 +20,8 @@ class TaskCollection(object):
             for pdf_task in self.tasks_obj_dic.values():
                 if pdf_task.all_task_done():
                     queue = get_sqs_queue(pdf_task.job_id)
-                    queue.send_message(MessageBody=pdf_task.get_summary_report())
+                    done_string = json.dumps(taksks)
+                    queue.send_message(MessageBody=done_string)
                     queue2 = get_sqs_queue("done_task")
                     done_task.send_message(Message_body=taksks )
                     # remove the done task from the task dic
