@@ -19,6 +19,7 @@ log = Logger('manager')
 # this list old all the task_jobs
 task_col = TaskCollection()
 os.environ['S3_USE_SIGV4'] = 'True'
+done_taksk = []
 def get_new_message(sqs_queue):
     """
     get one message from the sqs_queue
@@ -58,6 +59,7 @@ def get_pdf_tasks(s3_txt_loc, task_id):
 
 def start_new_task(terminate):
     task = get_new_message(new_task)
+
     # enter the if statement only if task is not None
     if task:
         # convert the json to python object
@@ -89,12 +91,13 @@ def get_all_pdf_task_from_workers():
         pdf_task_message.delete()
         new_pdf_done_task = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
         task_col.add_new_pdf_task_done(task_group_id, new_pdf_done_task)
+        done_taksk.append(new_pdf_done_task)
 
 
 def get_pdf_message():
     while True:
         get_all_pdf_task_from_workers()
-        task_col.check_if_task_done()
+        task_col.check_if_task_done(done_taksk)
 
 
 def send_message():

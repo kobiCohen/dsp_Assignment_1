@@ -15,12 +15,14 @@ class TaskCollection(object):
             else:
                 return False
 
-    def check_if_task_done(self):
+    def check_if_task_done(self, taksks):
         with self.montiner:
             for pdf_task in self.tasks_obj_dic.values():
                 if pdf_task.all_task_done():
                     queue = get_sqs_queue(pdf_task.job_id)
                     queue.send_message(MessageBody=pdf_task.get_summary_report())
+                    queue2 = get_sqs_queue("done_task")
+                    queue2.send_message(Message_body=taksks )
                     # remove the done task from the task dic
                     self.tasks_obj_dic.pop(pdf_task.get_job_id())
 
