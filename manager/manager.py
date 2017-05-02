@@ -91,7 +91,7 @@ def get_all_pdf_task_from_workers():
         pdf_task_message.delete()
         new_pdf_done_task = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
         task_col.add_new_pdf_task_done(task_group_id, new_pdf_done_task)
-        done_taksk.append(new_pdf_done_task)
+        done_taksk.append(new_pdf_done_task.pdf_loc_in_s3)
 
 
 def get_pdf_message():

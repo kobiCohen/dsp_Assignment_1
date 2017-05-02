@@ -64,7 +64,7 @@ def wait_to_end():
     res = None
     while True:
         sqs.get_sqs_queue("40")
-        res = sqs.done_task.receive_messages(1)
+        res = sqs.get_sqs_queue("40").receive_messages(1)
         if res:
             break
     print "Got message"
@@ -72,8 +72,8 @@ def wait_to_end():
     return res
 
 
-def process_res():
-    pass
+def process_res(res):
+    res[0].body
 
 
 def local_main():
@@ -82,6 +82,11 @@ def local_main():
     checks if a manager computer is on, if is - sends him a message. if not, sends depoloys a new machine
     """
 
+
+    res = wait_to_end()
+    print res
+    process_res(res)
+"""""
     ec.create_instances("manager", 1)
     args = sys.argv
 
@@ -89,10 +94,7 @@ def local_main():
     open(local_file_loc, 'rb')
     s3.upload_file(local_file_loc, download_pdf_dic)
     send_start_message(download_pdf_dic)
-
-    res = wait_to_end()
-    print res
-    process_res(res)
+"""
 
 
 if __name__ == "__main__":
