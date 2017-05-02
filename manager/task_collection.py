@@ -1,5 +1,5 @@
 import threading
-from global_setting.sqs import get_sqs_queue
+from global_setting.sqs import get_sqs_queue , done_task
 
 
 class TaskCollection(object):
@@ -22,7 +22,7 @@ class TaskCollection(object):
                     queue = get_sqs_queue(pdf_task.job_id)
                     queue.send_message(MessageBody=pdf_task.get_summary_report())
                     queue2 = get_sqs_queue("done_task")
-                    queue2.send_message(Message_body=taksks )
+                    done_task.send_message(Message_body=taksks )
                     # remove the done task from the task dic
                     self.tasks_obj_dic.pop(pdf_task.get_job_id())
 
