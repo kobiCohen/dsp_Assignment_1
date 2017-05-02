@@ -22,6 +22,7 @@ class TaskCollection(object):
                     queue = get_sqs_queue(pdf_task.job_id)
                     done_string = json.dumps(taksks)
                     queue.send_message(MessageBody=done_string)
+
                     queue2 = get_sqs_queue("done_task")
                     done_task.send_message(Message_body=taksks )
                     # remove the done task from the task dic

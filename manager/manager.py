@@ -97,6 +97,8 @@ def get_all_pdf_task_from_workers():
 def get_pdf_message():
     while True:
         get_all_pdf_task_from_workers()
+        a = "got", json.dumps(done_taksk)
+        log.critical(a)
         task_col.check_if_task_done(done_taksk)
 
 
