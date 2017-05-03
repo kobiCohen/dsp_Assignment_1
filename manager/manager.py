@@ -64,6 +64,11 @@ def start_new_task(terminate):
         # convert the json to python object
         # the json is in the format [pdf_loc_in_s3, task_id, terminate?, number_of_workers]
         txt_loc, task_id, terminate, number_of_workers = json.loads(task.body)
+        # txt_loc= type:string the loc in s3 not your pc
+        #task_id = type: string this is uuid
+        # terminate = type:bool true|false
+        #number_of_workers = type:int
+        message = json.dumps([txt_loc, task_id, terminate, number_of_workers])
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
         create_task_obj(pdf_tasks_list, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)

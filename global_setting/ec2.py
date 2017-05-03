@@ -27,7 +27,7 @@ def deploy_script(machine_type):
     return deploy
 
 
-def create_instances(machine_type, number_of_instances):
+def create_instances(machine_type, number_of_instances=1):
     """
     create new ec2  machine for worker|manager and deploy it
     :param machine_type: string worker|manager
@@ -41,7 +41,7 @@ def create_instances(machine_type, number_of_instances):
 
     #TODO: need to inc the number of instances until then hack
     if number_of_instances + len(worker_machine_list) + 1 >= 10 and machine_type == 'worker':
-        number_of_instances = 10 - (len(worker_machine_list) + 1)
+        number_of_instances = 20 - (len(worker_machine_list) + 1)
 
     script = deploy_script(machine_type)
     instance = ec2.create_instances(
@@ -97,5 +97,17 @@ def get_number_of_worker():
     return len(worker_machine_list)
 
 
+def get_manager():
+    """
+    checks currnet machines to see if a manager exists
+    :returns a machine that's a manager
+    """
+    for instance in ec2.instances.all():
+        for tag in instance.tags:
+            if tag[u'Key'] == 'manager':
+                return instance
+    return None
+
+
 if __name__ == '__main__':
-    create_instances('worker', 1)
+    get_manager()

@@ -15,6 +15,7 @@ from pdf_to_txt import pdf_to_txt
 from global_setting.setting import download_pdf_dic, convert_pdf_dic
 from global_setting.sqs import done_pdf_tasks, new_pdf_tasks
 from global_setting.s3 import upload_file
+import tarfile
 
 log = Logger('worker')
 
@@ -43,12 +44,16 @@ def upload_file_to_s3(pdf_name, operation_type, task_id):
     """
     tar_name = '{0}.tar.gz'.format(pdf_name)
     tar_full_path = '{0}/{1}'.format(convert_pdf_dic, tar_name)
-    check_call('tar -cvzf {0} {1}/* --remove-files'.format(tar_full_path, convert_pdf_dic), shell=True)
+    check_call('cd {0} ; tar -cvzf {1} ./* --remove-files'
+               .format(convert_pdf_dic, tar_name), shell=True)
     s3_file_loc = '{0}/{1}/{2}'.format(task_id, operation_type, tar_name)
     log.info('going to upload file {} to s3 under {}'.format(pdf_name, s3_file_loc))
     upload_file(tar_full_path, s3_file_loc)
     return s3_file_loc
 
+# tar = tarfile.open("sample.tar.gz", "w:gz")
+# tar.add("foo", filter=reset)
+# tar.close()
 
 def clean_pdf_folder():
     """
