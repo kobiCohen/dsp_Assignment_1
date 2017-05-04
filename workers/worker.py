@@ -18,7 +18,7 @@ from global_setting.s3 import upload_file
 log = Logger('worker')
 
 
-def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, successfully):
+def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, successfully, reason_to_failed=None):
     """
     send to the done pdf task a done messge int the format 
     [pdf_loc_in_s3, task_type, task_url]
@@ -28,7 +28,7 @@ def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, success
     :param task_group_id: the id for the return
     :return: None
     """
-    message = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
+    message = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully, reason_to_failed]
     done_pdf_tasks.send_message(MessageBody=json.dumps(message))
 
 
@@ -72,13 +72,13 @@ def download_pdf(task_pdf, pdf_name):
         response = urllib2.urlopen(task_pdf, timeout=5)
     except Exception as ex:
         log.exception(ex, info='cant download pdf file: {}'.format(task_pdf))
-        return False
+        return ex, False
     log.info('download {} successfully'.format(pdf_name))
     log.info('going to write to file the pdf'.format(pdf_name))
     with open('{0}/{1}.pdf'.format(download_pdf_dic, pdf_name), 'w+') as pdf_file:
         pdf_file.write(response.read())
     log.info('done writing to file the pdf'.format(pdf_name))
-    return True
+    return None, True
 
 
 def implement_task(task):
@@ -93,7 +93,9 @@ def implement_task(task):
     log.info('received new task {0} {1} {2}'.format(task_type, task_url, task_group_id))
     # parser the pdf name from pdf_url
     pdf_name = task_url.split('/')[-1][:-4]
-    if download_pdf(task_url, pdf_name) is True:
+    # return true if the download work or false and then return way
+    error, download_successfully = download_pdf(task_url, pdf_name)
+    if download_successfully is True:
         try:
             if task_type == 'ToImage':
                 log.info('trying to convert to IMG pdf: {0}'.format(pdf_name))
@@ -106,7 +108,9 @@ def implement_task(task):
                 pdf_to_txt(pdf_name)
             else:
                 log.warning('the task {0}-{1} is of unknown type'.format(task_type, task_url))
-                send_done_message(None, task_type, task_url, task_group_id, False)
+                send_done_message(None, task_type, task_url,
+                                  task_group_id, False,
+                                  'task type is worong {}'.format(task_type))
                 task.delete()
 
             pdf_loc_in_s3 = upload_file_to_s3(pdf_name, task_type, task_group_id)
@@ -115,7 +119,8 @@ def implement_task(task):
         except Exception as ex:
             # if we failed here, we will have the same error on all the worker.
             # send failed message
-            send_done_message(None, task_type, task_url, task_group_id, False)
+            send_done_message(None, task_type, task_url, task_group_id, False,
+                              'cant download the file for more info see the log {}'.format(ex))
             log.exception(ex, info=task.body)
             task.delete()
             return False
@@ -123,7 +128,7 @@ def implement_task(task):
 
     else:
         # if you cant download the pdf from the web delete the sqs messag
-        send_done_message('none', task_type, task_url, task_group_id, False)
+        send_done_message('none', task_type, task_url, task_group_id, False, 'cant download the file {}'.format(error))
         task.delete()
 
 

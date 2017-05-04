@@ -120,7 +120,7 @@ def process_res(res):
     res.delete()
     returned_results = json.loads(result_string)
     link_list = []
-    for task_type, pdf_loc_in_s3, task_url, task_group_id, successfully in returned_results:
+    for task_type, pdf_loc_in_s3, task_url, task_group_id, successfully, resone_failed in returned_results:
         if successfully is True:
             # get the file name from the pdf url in s3
             pdf_name = pdf_loc_in_s3.split('/')[-1].split('.')[0]

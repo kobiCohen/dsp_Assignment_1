@@ -114,13 +114,13 @@ def get_all_pdf_task_from_workers():
         if pdf_task_message is None:
             break
         try:
-            task_type, pdf_loc_in_s3, task_url, task_group_id, successfully = json.loads(pdf_task_message.body)
+            task_type, pdf_loc_in_s3, task_url, task_group_id, successfully, resone_failed = json.loads(pdf_task_message.body)
         except Exception as ex:
             log.exception(ex)
             pdf_task_message.delete()
             return None
         pdf_task_message.delete()
-        new_pdf_done_task = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
+        new_pdf_done_task = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully, resone_failed]
         task_col.add_new_pdf_task_done(task_group_id, new_pdf_done_task)
 
 
