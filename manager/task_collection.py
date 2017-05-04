@@ -3,6 +3,7 @@ from global_setting.sqs import get_sqs_queue
 
 
 class TaskCollection(object):
+    # class represents
     tasks_obj_dic = {}
 
     def __init__(self):

@@ -3,7 +3,7 @@ import botocore
 import logging
 import sys
 import os
-
+import argparse
 
 # this is a small hack so the worker will add the working dic to the sys file path
 cwd = os.getcwd()

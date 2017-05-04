@@ -13,6 +13,7 @@ from global_setting.s3 import download_file
 from global_setting.ec2 import create_instances, get_number_of_worker, delete_all_workers
 from task import Task
 from task_collection import TaskCollection
+from math import ceil
 
 log = Logger('manager')
 
@@ -64,18 +65,11 @@ def start_new_task(terminate):
         # convert the json to python object
         # the json is in the format [pdf_loc_in_s3, task_id, terminate?, number_of_workers]
         txt_loc, task_id, terminate, number_of_workers = json.loads(task.body)
-        # txt_loc= type:string the loc in s3 not your pc
-        #task_id = type: string this is uuid
-        # terminate = type:bool true|false
-        #number_of_workers = type:int
-        message = json.dumps([txt_loc, task_id, terminate, number_of_workers])
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
         create_task_obj(pdf_tasks_list, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)
-        number_of_needed_machine = int(len(pdf_tasks_list) / number_of_workers)
-        difference_between_machine = number_of_needed_machine - get_number_of_worker()
-        if difference_between_machine > 0:
-            create_instances('worker', difference_between_machine)
+        number_of_needed_machine = int(ceil(len(pdf_tasks_list) / number_of_workers))
+        create_instances('worker', number_of_needed_machine)
         task.delete()
     return terminate
 

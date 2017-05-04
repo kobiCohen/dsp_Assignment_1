@@ -1,4 +1,3 @@
-
 import json
 import urllib2
 from subprocess import check_call
@@ -15,7 +14,6 @@ from pdf_to_txt import pdf_to_txt
 from global_setting.setting import download_pdf_dic, convert_pdf_dic
 from global_setting.sqs import done_pdf_tasks, new_pdf_tasks
 from global_setting.s3 import upload_file
-import tarfile
 
 log = Logger('worker')
 
@@ -31,7 +29,6 @@ def send_done_message(pdf_loc_in_s3, task_type, task_url, task_group_id, success
     :return: None
     """
     message = [task_type, pdf_loc_in_s3, task_url, task_group_id, successfully]
-
     done_pdf_tasks.send_message(MessageBody=json.dumps(message))
 
 
@@ -51,9 +48,6 @@ def upload_file_to_s3(pdf_name, operation_type, task_id):
     upload_file(tar_full_path, s3_file_loc)
     return s3_file_loc
 
-# tar = tarfile.open("sample.tar.gz", "w:gz")
-# tar.add("foo", filter=reset)
-# tar.close()
 
 def clean_pdf_folder():
     """
