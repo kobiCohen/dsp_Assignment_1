@@ -152,6 +152,7 @@ def send_message():
             delete_all_workers()
             log.warning('the manager is going to sleep, it was nice to work with you')
             delete_the_manager()
+            break;
 
 
 def main_loop():
