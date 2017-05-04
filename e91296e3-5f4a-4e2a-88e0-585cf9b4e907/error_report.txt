@@ -1,5 +1,0 @@
-the task ToText http://www.cs.bgu.ac.il/~dsp142/wiki.filesdfdsfdsfdsfdsfs/202-1-5391.pdf  failed the because: 
- cant download the file for more info see the log Command 'pdftotext -l 1 /home/ubuntu/pdf/202-1-5391.pdf /home/ubuntu/pdf_result/202-1-5391.txt' returned non-zero exit status 1 
- the task ToText http://www.csdfdsfsdfs.bgu.ac.il/~dsp142/wiki.filesdfdsfdsfdsfdsfs/202-1-5391.pdf  failed the because: 
- cant download the file <urlopen error [Errno -2] Name or service not known> 
- 

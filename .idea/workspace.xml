@@ -2,9 +2,80 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="60546989-55f0-469c-b392-7ab7735ab073" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local/local.py" afterPath="$PROJECT_DIR$/local/local.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/task_1.txt" afterPath="$PROJECT_DIR$/task_1.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/workers/worker.py" afterPath="$PROJECT_DIR$/workers/worker.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/0c300da4-8f6f-427f-a00e-4fbb5d2d3207/ToHTML/202-1-5391.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/0c300da4-8f6f-427f-a00e-4fbb5d2d3207/ToHTML/202-1-5391001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/0c300da4-8f6f-427f-a00e-4fbb5d2d3207/ToImage/202-1-5391-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/0c300da4-8f6f-427f-a00e-4fbb5d2d3207/ToText/202-1-5391.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/4e3d6b78-9482-435d-9149-790fe1f1c9e5/ToHTML/202-1-5391.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/4e3d6b78-9482-435d-9149-790fe1f1c9e5/ToHTML/202-1-5391001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/4e3d6b78-9482-435d-9149-790fe1f1c9e5/ToImage/202-1-5391-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/4e3d6b78-9482-435d-9149-790fe1f1c9e5/ToText/202-1-5391.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/2014passoverordersheet.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/2014passoverordersheet001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/HowToPrepareForAPassoverDinner.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/HowToPrepareForAPassoverDinner001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/Matzolah-article-Aus-Jewish-Outlook2.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/Matzolah-article-Aus-Jewish-Outlook2001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/Passover%20brochure%202.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/Passover%20brochure%202001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/Revised_UU_Version_Humanist_Haggadah_061704.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/Revised_UU_Version_Humanist_Haggadah_061704001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/a_passover_prayer.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/a_passover_prayer001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/haggadah.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/haggadah001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/passover.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/passover001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/passover_chart.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/passover_chart001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/passoverguidelines.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/passoverguidelines001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/specials.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/specials001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/why-do-we-sing-the-song-of-songs-on-passover.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToHTML/why-do-we-sing-the-song-of-songs-on-passover001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/08-03-01-03-haggadah-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/2014_Seder_Invite_for_Connection_Final-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/BE-Holiday-Menu-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/H4C_Passover_Seder-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Kitniyot-Quinoa-and-Kashrut-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Kosher-Passover-Menu_FINAL-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Menu-Passover-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/OK_PassoverFoodGuide2014-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/PASSOVER%20MENU%202013%20one%20page-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Passover%20_%20Easter%20in%20Public%20Schools-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Passover%20and%20Spices-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/PassoverDinner-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Passover_Guide_BOOKLET-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/SGPassover2013-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/Supper_6-30-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/haggadah-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/haggadah_e-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/jesusandseder-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/judaism_passover_whatis-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToImage/newsletter-01.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/2014passover.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/Booklet_Passover.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/CUROT038.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/Harding%20of%20the%20Heart%20%20A%20Passover%20Sermon.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/Passover%20Insights.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/PassoverandEaster.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/TellingTheStoryInside.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/The%20Passover%20Seder.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/a-Gentile-to-the-Passover-Seder.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/article_passover_symbols.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/introduction.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/pascater11.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/9ba57069-d146-4078-8014-e7e8f64a40f6/ToText/passover.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/b8c2fe5e-b52f-4400-bb7c-021f88c563a2/ToHTML/202-1-5391.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/b8c2fe5e-b52f-4400-bb7c-021f88c563a2/ToHTML/202-1-5391001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/b8c2fe5e-b52f-4400-bb7c-021f88c563a2/ToImage/202-1-5391-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/b8c2fe5e-b52f-4400-bb7c-021f88c563a2/ToText/202-1-5391.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/e91296e3-5f4a-4e2a-88e0-585cf9b4e907/ToHTML/202-1-5391.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/e91296e3-5f4a-4e2a-88e0-585cf9b4e907/ToHTML/202-1-5391001.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/e91296e3-5f4a-4e2a-88e0-585cf9b4e907/ToImage/202-1-5391-1.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/e91296e3-5f4a-4e2a-88e0-585cf9b4e907/ToText/202-1-5391.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/e91296e3-5f4a-4e2a-88e0-585cf9b4e907/error_report.txt" afterPath="" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -28,8 +99,8 @@
       <file leaf-file-name="local.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/local/local.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1347">
-              <caret line="133" column="41" lean-forward="false" selection-start-line="133" selection-start-column="28" selection-end-line="133" selection-end-column="41" />
+            <state relative-caret-position="340">
+              <caret line="132" column="41" lean-forward="false" selection-start-line="132" selection-start-column="41" selection-end-line="132" selection-end-column="41" />
               <folding>
                 <element signature="e#0#37#0" expanded="true" />
               </folding>
@@ -1034,8 +1105,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/local/local.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1347">
-          <caret line="133" column="41" lean-forward="false" selection-start-line="133" selection-start-column="28" selection-end-line="133" selection-end-column="41" />
+        <state relative-caret-position="340">
+          <caret line="132" column="41" lean-forward="false" selection-start-line="132" selection-start-column="41" selection-end-line="132" selection-end-column="41" />
           <folding>
             <element signature="e#0#37#0" expanded="true" />
           </folding>
