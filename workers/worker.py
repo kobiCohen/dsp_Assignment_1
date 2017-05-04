@@ -119,8 +119,7 @@ def implement_task(task):
         except Exception as ex:
             # if we failed here, we will have the same error on all the worker.
             # send failed message
-            send_done_message(None, task_type, task_url, task_group_id, False,
-                              'cant download the file for more info see the log {}'.format(ex))
+            send_done_message(None, task_type, task_url, task_group_id, False, '{}'.format(ex))
             log.exception(ex, info=task.body)
             task.delete()
             return False
@@ -128,7 +127,7 @@ def implement_task(task):
 
     else:
         # if you cant download the pdf from the web delete the sqs messag
-        send_done_message('none', task_type, task_url, task_group_id, False, 'cant download the file {}'.format(error))
+        send_done_message('none', task_type, task_url, task_group_id, False, '{}'.format(error))
         task.delete()
 
 

@@ -120,6 +120,7 @@ def process_res(res):
     res.delete()
     returned_results = json.loads(result_string)
     link_list = []
+    error_report = ""
     for task_type, pdf_loc_in_s3, task_url, task_group_id, successfully, resone_failed in returned_results:
         if successfully is True:
             # get the file name from the pdf url in s3
@@ -127,6 +128,12 @@ def process_res(res):
             download_file_and_create_link(pdf_loc_in_s3, task_type, work_dir)
             # add the local loc file to the list
             link_list.append(get_pdf_loc_in_local(pdf_name, task_type))
+        else:
+            error_message = 'task_type: {}  pdf_ur: {}  why: {} \n'.format(task_type, task_url, resone_failed)
+            logging.warning(error_message)
+            error_report += error_message
+    with open(join(work_dir, 'error_report.txt'), 'w+') as txt_file:
+        txt_file.write(error_report)
     return work_dir
 
 
