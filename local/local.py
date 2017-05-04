@@ -141,12 +141,20 @@ def local_main(file_loc, number_of_worker, terminate, port):
     """
     # check if the manager is alive if not create one
     if get_manager() is None:
+        log.info('no manager found, create new manager')
         create_instances('manager')
+    else:
+        log.info('found a manager no need to create one')
     task_loc_in_s3 = '{}_task.txt'.format(local_id)
+    log.info('upload to s3 the file {}'.format(file_loc))
     s3.upload_file(file_loc, task_loc_in_s3)
+    log.info('send the start message to the manager')
     send_start_message(task_loc_in_s3, number_of_worker, terminate)
+    log.info('going to busy wait for the result')
     res = wait_to_end()
+    log.info('manager send done message, going to download the file from s3')
     web_home_server_dic = process_res(res)
+    log.info('going to create the web site')
     build_and_run_server(web_home_server_dic, port)
 
 
