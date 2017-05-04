@@ -67,6 +67,16 @@ def delete_all_workers():
         machine.terminate()
 
 
+def delete_the_manager():
+    """
+    terminate the manager
+    :return:None 
+    """
+    manger = get_manager()
+    if manger is not None:
+        manger.terminate()
+
+
 def get_number_of_worker():
     """
     get how many worker are running 
@@ -85,7 +95,7 @@ def get_workers():
         if instance.state[u'Name'] == 'pending' or instance.state[u'Name'] == 'running':
             for tag in instance.tags:
                 if tag[u'Key'] == 'worker':
-                    list_of_workers += instance
+                    list_of_workers.append(instance)
     return list_of_workers
 
 

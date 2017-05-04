@@ -97,9 +97,7 @@ def local_main(file_loc, number_of_worker, terminate, port):
     web_home_server_dic = process_res(res)
     build_and_run_server(web_home_server_dic, port)
 
-
-
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser(description='for local')
     parser.add_argument('-f', action="store", type=str, dest='file')
     parser.add_argument('-n', action="store", type=int, dest='number')
@@ -111,3 +109,7 @@ if __name__ == "__main__":
     terminate = args.terminate
     port = args.port
     local_main(file_loc, number_of_worker, terminate, port)
+
+
+if __name__ == "__main__":
+    main()

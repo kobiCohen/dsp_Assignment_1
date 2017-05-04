@@ -1,9 +1,11 @@
+from colorlog import ColoredFormatter
 import boto3
 import botocore
 import logging
 import sys
 import os
 import argparse
+
 
 # this is a small hack so the worker will add the working dic to the sys file path
 cwd = os.getcwd()
@@ -36,14 +38,25 @@ def clean_old_logs():
             print ex
 
 
-def build_logger():
+def build_logger(debug_level):
     clean_old_logs()
     log.setLevel(logging.DEBUG)
     ch = logging.StreamHandler()
     ch.setLevel(logging.DEBUG)
-    formatter = logging.Formatter("%(levelname)s - %(message)s")
-    ch.setFormatter(formatter)
+    color_formatter = ColoredFormatter("%(log_color)s - %(levelname)s - %(message)s%(reset)s")
+    ch.setFormatter(color_formatter)
     log.addHandler(ch)
+    set_debug_level(debug_level)
+
+
+def set_debug_level(debug_level):
+    # info level
+    if debug_level == 'i':
+        log.setLevel(logging.INFO)
+    elif debug_level == 'w':
+        log.setLevel(logging.WARNING)
+    elif debug_level == 'c':
+        log.setLevel(logging.CRITICAL)
 
 
 def read_info():
@@ -75,10 +88,12 @@ def main_loop():
 
 
 def main():
-    build_logger()
-    # log.setLevel(logging.ERROR)
+    parser = argparse.ArgumentParser(description='for local')
+    parser.add_argument('-d', action="store", type=str, default='i', dest='debug_level')
+    args = parser.parse_args()
+    debug_level = args.debug_level
+    build_logger(debug_level)
     main_loop()
-
 
 if __name__ == '__main__':
     main()

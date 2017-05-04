@@ -10,7 +10,7 @@ sys.path.append(cwd)
 from logger.logger import Logger
 from global_setting.sqs import new_task, new_pdf_tasks, done_pdf_tasks
 from global_setting.s3 import download_file
-from global_setting.ec2 import create_instances, get_number_of_worker, delete_all_workers
+from global_setting.ec2 import create_instances, delete_all_workers, delete_the_manager
 from task import Task
 from task_collection import TaskCollection
 from math import ceil
@@ -36,17 +36,34 @@ def get_new_message(sqs_queue):
 
 
 def send_pdf_tasks_to_workers(pdf_task_list):
+    """
+    conver the task to json and send it to the wirker
+    :param pdf_task_list: list -> a list of all the task
+    :return: None
+    """
     for task in pdf_task_list:
         task_json = json.dumps(task)
         new_pdf_tasks.send_message(MessageBody=task_json)
 
 
 def create_task_obj(pdf_tasks_list, task_id):
+    """
+    create a new task obj and add it to task_col
+    :param pdf_tasks_list: list -> list of all the task
+    :param task_id: string -> the is of the job
+    :return: None
+    """
     new_task_obj = Task(pdf_tasks_list, task_id)
     task_col.add_new_task(task_id, new_task_obj)
 
 
 def get_pdf_tasks(s3_txt_loc, task_id):
+    """
+    doenload and open the pdf task list and create a list of task from the file
+    :param s3_txt_loc: string -> s3 file loc
+    :param task_id: string -> the id number of the task
+    :return: list -> of all the task
+    """
     task_list = []
     local_txt_loc = '/tmp/{0}.txt'.format(task_id)
     download_file(s3_txt_loc, local_txt_loc)
@@ -59,12 +76,21 @@ def get_pdf_tasks(s3_txt_loc, task_id):
 
 
 def start_new_task(terminate):
+    """
+    if there is new task 
+    1) download it and parser it to a list
+    2) send the list of task to the worker
+    3) create more worker if needed
+    :param terminate:  bool -> if should terminate
+    :return: bool -> if should terminate
+    """
     task = get_new_message(new_task)
     # enter the if statement only if task is not None
     if task:
         # convert the json to python object
         # the json is in the format [pdf_loc_in_s3, task_id, terminate?, number_of_workers]
         txt_loc, task_id, terminate, number_of_workers = json.loads(task.body)
+        log.info('received new task from local uuid {}'.format(task.body))
         pdf_tasks_list = get_pdf_tasks(txt_loc, task_id)
         create_task_obj(pdf_tasks_list, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)
@@ -75,6 +101,10 @@ def start_new_task(terminate):
 
 
 def get_all_pdf_task_from_workers():
+    """
+    get all task from worker
+    :return: None
+    """
     while True:
         pdf_task_message = get_new_message(done_pdf_tasks)
         # if the message queue is empty exit
@@ -102,16 +132,21 @@ def send_message():
     while True:
         if terminate is False:
             terminate = start_new_task(terminate)
+            if terminate is True:
+                log.warning('manager received terminate message ')
         if terminate is True and task_col.all_task_are_done():
+            log.warning('going to terminate all worker')
             delete_all_workers()
+            log.warning('the manager is going to sleep, it was nice to work with you')
+            delete_the_manager()
+
 
 
 def main_loop():
     log.info('manager start is life cycle')
     thread.start_new_thread(get_pdf_message, ())
     send_message()
-    # get_pdf_message()
-    # send_message()
+
 
 
 # you will enter the if statement only when the module is main
