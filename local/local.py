@@ -1,3 +1,4 @@
+from colorlog import ColoredFormatter
 import sys
 import os
 import uuid
@@ -16,24 +17,45 @@ from time import sleep
 from os.path import join
 from simple_web import  build_and_run_server
 local_id = str(uuid.uuid4())
-
-worker_machine_list = []
-manger_machine = []
+import logging
 
 
-def send_start_message(task_name, number_of_worker, terminate):
+log = logging.getLogger('local')
+
+
+def build_logger():
+    """
+    build the logger
+    :return: None 
+    """
+    log.setLevel(logging.DEBUG)
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+    color_formatter = ColoredFormatter("%(log_color)s - %(levelname)s - %(message)s%(reset)s")
+    ch.setFormatter(color_formatter)
+    log.addHandler(ch)
+
+
+def send_start_message(task_loc_in_s3_name, number_of_worker, terminate):
+    """
+    create a task sqs for the manager and send it
+    :param task_loc_in_s3_name: string ->  where you can find the task in s3
+    :param number_of_worker:  int -> number of worker
+    :param terminate:  bool -> should terminate
+    :return: None
+    """
     task_id = local_id
     terminate = terminate
     number_of_workers = number_of_worker
 
-    message = json.dumps([task_name, task_id, terminate, number_of_workers])
+    message = json.dumps([task_loc_in_s3_name, task_id, terminate, number_of_workers])
     sqs.new_task.send_message(MessageBody=message)
 
 
 def wait_to_end():
     """
-    Waits till the manager sends a job is done message
-    :return: results of processing the file
+    busy wait till the manager sends a job is done message
+    :return: sqs message obj
     """
     while True:
         res = sqs.get_sqs_queue(local_id).receive_messages(1)
@@ -43,7 +65,13 @@ def wait_to_end():
 
 
 def download_file_and_create_link(pdf_loc_in_s3, task_type, work_dir):
-
+    """
+    download the file from s3 untar it and remove the tar
+    :param pdf_loc_in_s3: string -> the loc in s3
+    :param task_type:  string -> task type
+    :param work_dir:  string -> working dir
+    :return: None
+    """
     task_folder = '{}/{}/'.format(work_dir, task_type)
     local_file_loc = '{}temp.tar.gz '.format(task_folder)
     s3.download_file(pdf_loc_in_s3, local_file_loc)
@@ -53,6 +81,12 @@ def download_file_and_create_link(pdf_loc_in_s3, task_type, work_dir):
 
 
 def get_pdf_loc_in_local(pdf_name, task_type):
+    """
+    get the loc of the file in your local pc
+    :param pdf_name: string -> the pdf namme
+    :param task_type: string -> the task file
+    :return: string -> the full path of the local convert file
+    """
     local_loc = '{}/{}/{}'.format(cwd, task_type, pdf_name)
     if task_type == 'ToImage':
         return '{}.png'.format(local_loc)
@@ -62,12 +96,26 @@ def get_pdf_loc_in_local(pdf_name, task_type):
         return '{}.txt'.format(local_loc)
 
 
-def process_res(res):
-    work_dir = join(cwd, local_id)
+def create_local_folder(work_dir):
+    """
+    create the local folder
+    :param work_dir: string -> the working dic
+    :return: None 
+    """
     os.mkdir(work_dir)
     os.mkdir(join(cwd, local_id, 'ToImage'))
     os.mkdir(join(cwd, local_id, 'ToHTML'))
     os.mkdir(join(cwd, local_id, 'ToText'))
+
+
+def process_res(res):
+    """
+    process the result from the manager
+    :param res:  string-> the summery report
+    :return: string -> the working dir
+    """
+    work_dir = join(cwd, local_id)
+    create_local_folder(work_dir)
     result_string = res.body
     res.delete()
     returned_results = json.loads(result_string)
@@ -84,20 +132,29 @@ def process_res(res):
 
 def local_main(file_loc, number_of_worker, terminate, port):
     """
-    starts thr actions of the local
-    checks if a manager computer is on, if is - sends him a message. if not, sends depoloys a new machine
+    the local main
+    :param file_loc: string -> the task file loc 
+    :param number_of_worker:  int -> number of worker per task
+    :param terminate:  bool -> should terminate
+    :param port: int -> the port of local site
+    :return: 
     """
     # check if the manager is alive if not create one
     if get_manager() is None:
         create_instances('manager')
-    task_name = '{}_task.txt'.format(local_id)
-    s3.upload_file(file_loc, task_name)
-    send_start_message(task_name, number_of_worker, terminate)
+    task_loc_in_s3 = '{}_task.txt'.format(local_id)
+    s3.upload_file(file_loc, task_loc_in_s3)
+    send_start_message(task_loc_in_s3, number_of_worker, terminate)
     res = wait_to_end()
     web_home_server_dic = process_res(res)
     build_and_run_server(web_home_server_dic, port)
 
+
 def main():
+    """
+    thr main parse args from command line
+    :return: None
+    """
     parser = argparse.ArgumentParser(description='for local')
     parser.add_argument('-f', action="store", type=str, dest='file')
     parser.add_argument('-n', action="store", type=int, dest='number')
@@ -108,8 +165,11 @@ def main():
     number_of_worker = args.number
     terminate = args.terminate
     port = args.port
+    log.info('local start is life')
+    log.info('the task id {}'.format(local_id))
     local_main(file_loc, number_of_worker, terminate, port)
 
 
 if __name__ == "__main__":
+    build_logger()
     main()

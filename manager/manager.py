@@ -95,6 +95,9 @@ def start_new_task(terminate):
         create_task_obj(pdf_tasks_list, task_id)
         send_pdf_tasks_to_workers(pdf_tasks_list)
         number_of_needed_machine = int(ceil(len(pdf_tasks_list) / number_of_workers))
+        # if you request much more workers the task fix the zero to 1
+        if number_of_needed_machine == 0:
+            number_of_needed_machine = 1
         create_instances('worker', number_of_needed_machine)
         task.delete()
     return terminate
@@ -122,12 +125,22 @@ def get_all_pdf_task_from_workers():
 
 
 def get_pdf_message():
+    """
+    this func is responsibility get all the task from the worker
+    and check if one or more task is done
+    :return: None 
+    """
     while True:
         get_all_pdf_task_from_workers()
         task_col.check_if_task_done()
 
 
 def send_message():
+    """
+    this func is responsibility for send task to worker
+     and if all task done terminate the worker and manager
+    :return: None
+    """
     terminate = False
     while True:
         if terminate is False:
@@ -141,12 +154,14 @@ def send_message():
             delete_the_manager()
 
 
-
 def main_loop():
+    """
+    the manager main loop
+    :return:None 
+    """
     log.info('manager start is life cycle')
     thread.start_new_thread(get_pdf_message, ())
     send_message()
-
 
 
 # you will enter the if statement only when the module is main

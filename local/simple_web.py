@@ -30,3 +30,4 @@ def build_and_run_server(server_home_dic, port):
     """
     open_browser(port)
     run_server(server_home_dic, port)
+
