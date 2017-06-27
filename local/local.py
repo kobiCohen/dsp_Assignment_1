@@ -6,7 +6,7 @@ import json
 cwd = os.getcwd()
 sys.path.append(cwd)
 import boto3
-import end
+
 import global_setting.s3 as s3
 import global_setting.sqs as sqs
 import argparse

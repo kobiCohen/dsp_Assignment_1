@@ -89,7 +89,7 @@ def main_loop():
 
 def main():
     parser = argparse.ArgumentParser(description='for local')
-    parser.add_argument('-d', action="store", type=str, default='i', dest='debug_level')
+    parser.add_argument('-d', action="store", type= str, default='i', dest='debug_level')
     args = parser.parse_args()
     debug_level = args.debug_level
     build_logger(debug_level)

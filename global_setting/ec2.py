@@ -12,12 +12,12 @@ def deploy_script(machine_type):
     """
     if machine_type == 'worker':
         return """#!/bin/bash
-        runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git'
+        runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/kobiCohen/dsp_Assignment_1.git'
         runuser -l ubuntu -c 'cd /home/ubuntu/dsp_Assignment_1; python ./workers/worker.py &> /home/ubuntu/log.txt' 
         """
     elif machine_type == 'manager':
         return """#!/bin/bash \n
-        runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/noam-stein/dsp_Assignment_1.git'
+        runuser -l ubuntu -c 'cd /home/ubuntu ;git clone https://github.com/kobiCohen/dsp_Assignment_1.git'
         runuser -l ubuntu -c 'cd /home/ubuntu/dsp_Assignment_1; python ./manager/manager.py &> /home/ubuntu/log.txt' 
         """
 
